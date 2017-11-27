@@ -1,0 +1,14 @@
+python train_multilabel.py \
+--epoch 0 \
+--model /Users/otkach/Desktop/18K/model/resnet-50 \
+--batch-size 64 \
+--num-classes 52 \
+--data-train /Users/otkach/Desktop/18K/data_18K/train_data.lst \
+--image-train /Users/otkach/Desktop/18K/dataset_18K/images/ \
+--data-val /Users/otkach/Desktop/18K/data_18K/val_data.lst \
+--image-val /Users/otkach/Desktop/18K/dataset_18K/images/ \
+--num-examples 100000 \
+--lr 0.001 \
+--num-epoch 15 \
+--save-result /Users/otkach/Desktop/18K/snapshots/ \
+--save-name multilabel-resnet-50
