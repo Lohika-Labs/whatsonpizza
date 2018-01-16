@@ -43,5 +43,9 @@
                 }
             }
         ]
-    }
+    },
+
+    "python.linting.pylintArgs": [
+        "--disable=C0111,C0103"
+    ],
 }

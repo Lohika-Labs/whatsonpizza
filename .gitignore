@@ -2,3 +2,4 @@ dataset_18K/images/
 snapshots/
 *.pyc
 .vscode/tags
+.vscode/.rope*
