@@ -4,6 +4,7 @@ import os, sys
 import numpy as np
 import dotenv
 import ipdb
+import json
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -37,73 +38,73 @@ def multi_factor_scheduler(begin_epoch, epoch_size, step=[5,10], factor=0.1):
     step_ = [epoch_size * (x-begin_epoch) for x in step if x-begin_epoch > 0]
     return mx.lr_scheduler.MultiFactorScheduler(step=step_, factor=factor) if len(step_) else None
 
-def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
+def train_model(params):
     train = mx.image.ImageIter(
-        batch_size          = args.batch_size,
-        data_shape          = (3,224,224),
-        label_width         = num_class,
-        path_imglist        = args.data_train,
-        path_root           = args.image_train,
-        part_index          = kv.rank,
-        num_parts           = kv.num_workers,
+        batch_size          = params.batch_size,
+        data_shape          = params.image_shape,
+        label_width         = params.num_classes,
+        path_imglist        = params.data_train,
+        path_root           = params.image_train,
+        part_index          = params.kv.rank,
+        num_parts           = params.kv.num_workers,
         shuffle             = True,
         data_name           = 'data',
         label_name          = 'softmax_label',
-        aug_list            = mx.image.CreateAugmenter((3,224,224),resize=224,rand_crop=True,rand_mirror=True,mean=True,std=True))
+        aug_list            = mx.image.CreateAugmenter(params.image_shape,resize=params.image_shape[-1],rand_crop=True,rand_mirror=True,mean=True,std=True))
 
     val = mx.image.ImageIter(
-        batch_size          = args.batch_size,
-        data_shape          = (3,224,224),
-        label_width         = num_class,
-        path_imglist        = args.data_val,
-        path_root           = args.image_val,
-        part_index          = kv.rank,
-        num_parts           = kv.num_workers,
+        batch_size          = params.batch_size,
+        data_shape          = params.image_shape,
+        label_width         = params.num_classes,
+        path_imglist        = params.data_val,
+        path_root           = params.image_val,
+        part_index          = params.kv.rank,
+        num_parts           = params.kv.num_workers,
         data_name           = 'data',
         label_name          = 'softmax_label',
-        aug_list            = mx.image.CreateAugmenter((3,224,224),resize=224,mean=True,std=True))
+        aug_list            = mx.image.CreateAugmenter(params.image_shape,resize=params.image_shape[-1],mean=True,std=True))
 
-    kv = mx.kvstore.create(args.kv_store)
+    kvstore = mx.kvstore.create(params.kv_store)
 
-    prefix = model
-    sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, epoch)
+    prefix = params.model
+    sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, params.epoch)
 
-    (new_sym, new_args) = get_fine_tune_model(
-        sym, arg_params, args.num_classes, 'flatten0')
+    (new_sym, new_args) = get_fine_tune_model(sym, arg_params, params.num_classes, 'flatten0')
 
-    epoch_size = max(int(args.num_examples / args.batch_size / kv.num_workers), 1)
-    lr_scheduler=multi_factor_scheduler(args.epoch, epoch_size)
+    epoch_size = max(int(params.num_examples / params.batch_size / kvstore.num_workers), 1)
+    lr_scheduler=multi_factor_scheduler(params.epoch, epoch_size)
 
     optimizer_params = {
-            'learning_rate': args.lr,
-            'momentum' : args.mom,
-            'wd' : args.wd,
+            'learning_rate': params.lr,
+            'momentum' : params.mom,
+            'wd' : params.wd,
             'lr_scheduler': lr_scheduler}
     initializer = mx.init.Xavier(
             rnd_type='gaussian', factor_type="in", magnitude=2)
 
-    if gpus == '':
-        devs = mx.cpu()
+    if params.gpus:
+        devs = [mx.gpu(int(i)) for i in params.gpus.split(',')]
     else:
-        devs = [mx.gpu(int(i)) for i in gpus.split(',')]
+        devs = mx.cpu()
 
     model = mx.mod.Module(
         context       = devs,
         symbol        = new_sym
     )
 
-    checkpoint = mx.callback.do_checkpoint(args.save_result+args.save_name)
+    checkpoint = mx.callback.do_checkpoint(params.save_result+params.save_name)
 
-    def acc(label, pred, label_width = num_class):
+    def acc(label, pred, label_width = params.num_classes):
         return float((label == np.round(pred)).sum()) / label_width / pred.shape[0]
 
     def loss(label, pred):
+        eps = 1e-6
         loss_all = 0
         for i in range(len(pred)):
             loss = 0
-            loss -= label[i] * np.log(pred[i] + 1e-6) + (1.- label[i]) * np.log(1. + 1e-6 - pred[i])
+            loss -= label[i] * np.log(pred[i] + eps) + (1. - label[i]) * np.log(1. + eps - pred[i])
             loss_all += np.sum(loss)
-        loss_all = float(loss_all)/float(len(pred) + 0.000001)
+        loss_all = float(loss_all) / float(len(pred) + eps)
         return  loss_all
 
 
@@ -112,19 +113,19 @@ def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
     eval_metric.append(mx.metric.np(loss))
 
     model.fit(train,
-              begin_epoch=epoch,
-              num_epoch=num_epoch,
+              begin_epoch=params.epoch,
+              num_epoch=params.num_epoch,
               eval_data=val,
               eval_metric=eval_metric,
               validation_metric=eval_metric,
-              kvstore=kv,
+              kvstore=kvstore,
               optimizer='sgd',
               optimizer_params=optimizer_params,
               arg_params=new_args,
               aux_params=aux_params,
               initializer=initializer,
               allow_missing=True,
-              batch_end_callback=mx.callback.Speedometer(args.batch_size, 20),
+              batch_end_callback=mx.callback.Speedometer(params.batch_size, 20),
               epoch_end_callback=checkpoint)
 
 if __name__ == '__main__':
@@ -149,16 +150,19 @@ if __name__ == '__main__':
     parser.add_argument('--save-name',     type=str, default=os.environ['save-name'], help='the save name of model')
     args = parser.parse_args()
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    # logger = logging.getLogger()
+    # logger.setLevel(logging.DEBUG)
 
-    kv = mx.kvstore.create(args.kv_store)
+    args.kv = mx.kvstore.create(args.kv_store)
+    args.image_shape = tuple(np.fromstring(os.environ['image-shape'], dtype=np.int, sep=','))
+    args_str = json.dumps(vars(args), indent=2, sort_keys=True, default=lambda o: o.__dict__)
 
     if not os.path.exists(args.save_result):
         os.mkdir(args.save_result)
+    
     hdlr = logging.FileHandler(args.save_result+ '/train.log')
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr)
-    logging.info(args)
+    logging.info(args_str)
 
-    train_model(model=args.model, gpus=args.gpus, epoch=args.epoch, num_epoch=args.num_epoch, kv=kv, num_class=args.num_classes)
+    train_model(args)
