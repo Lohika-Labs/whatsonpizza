@@ -1,0 +1,47 @@
+{
+
+    // set this pythonPath in Workspace Settings
+    // NB! do not uncomment here, copy this snippet to Workspace settings
+    // "settings": {
+    //     "python.pythonPath": "/home/nhrabovskyy/.virtualenvs/mxnet-cu90mkl/bin/python"
+    // }    
+
+    // install Deploy (reloaded) VSCode extension for deploy functionality
+    "deploy.reloaded": {
+        "packages": [
+            {
+                "name": "pizza",
+                "description": "whats on pizza",
+                "files": [
+                    "**/*.py",
+                    "**/*.json",
+                    "**/*.params",
+                    "**/*.txt",
+                    "**/*.lst",
+                    "**/*.sh",
+                    "*.env"
+                ],
+                "exclude": [
+                    "tests/**"
+                ]
+            }                
+        ],
+
+        "targets": [
+            {
+                "type": "sftp",
+                "name": "GPU pizza",
+                "description": "SFTP to GPU pizza",
+                "dir": "/home/otkach/whatsonpizza/",
+                "host": "172.22.57.129",
+                "port": 22,
+                "user": "otkach",
+                "password": "User123",
+                "agent": "${SSH_AUTH_SOCK}",
+                "mappings": {
+                    "/whatsonpizza/**/*": "/home/otkach/whatsonpizza/"
+                }
+            }
+        ]
+    }
+}

@@ -2,6 +2,11 @@ import argparse
 import mxnet as mx
 import os, sys
 import numpy as np
+import dotenv
+import ipdb
+
+dotenv.load_dotenv(dotenv.find_dotenv())
+
 sys.path.insert(0, "./settings")
 sys.path.insert(0, "../")
 
@@ -18,7 +23,7 @@ logger.addHandler(console)
 from crossentropy import *
 
 def get_fine_tune_model(sym, arg_params, num_classes, layer_name):
-    
+
     all_layers = sym.get_internals()
     net = all_layers[layer_name+'_output']
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc')
@@ -35,7 +40,7 @@ def multi_factor_scheduler(begin_epoch, epoch_size, step=[5,10], factor=0.1):
 def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
     train = mx.image.ImageIter(
         batch_size          = args.batch_size,
-        data_shape          = (3,224,224),        
+        data_shape          = (3,224,224),
         label_width         = num_class,
         path_imglist        = args.data_train,
         path_root           = args.image_train,
@@ -53,7 +58,7 @@ def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
         path_imglist        = args.data_val,
         path_root           = args.image_val,
         part_index          = kv.rank,
-        num_parts           = kv.num_workers,       
+        num_parts           = kv.num_workers,
         data_name           = 'data',
         label_name          = 'softmax_label',
         aug_list            = mx.image.CreateAugmenter((3,224,224),resize=224,mean=True,std=True))
@@ -81,7 +86,7 @@ def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
         devs = mx.cpu()
     else:
         devs = [mx.gpu(int(i)) for i in gpus.split(',')]
-        
+
     model = mx.mod.Module(
         context       = devs,
         symbol        = new_sym
@@ -121,27 +126,27 @@ def train_model(model, gpus, epoch=0, num_epoch=20, kv='device', num_class=6):
               allow_missing=True,
               batch_end_callback=mx.callback.Speedometer(args.batch_size, 20),
               epoch_end_callback=checkpoint)
-    
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='score a model on a dataset')
-    parser.add_argument('--model',         type=str, required=True)
-    parser.add_argument('--gpus',          type=str, default='')
-    parser.add_argument('--batch-size',    type=int, default=200)
-    parser.add_argument('--epoch',         type=int, default=0)
-    parser.add_argument('--image-shape',   type=str, default='3,224,224')
-    parser.add_argument('--data-train',    type=str, default='/Users/otkach/multilabel-MXNet/data_example/train_data.lst')
-    parser.add_argument('--image-train',   type=str, default='/Users/otkach/PycharmProjects/whatsonpizza/dataset/images/')
-    parser.add_argument('--data-val',      type=str, default='/Users/otkach/multilabel-MXNet/data_example/val_data.lst')
-    parser.add_argument('--image-val',     type=str, default='/Users/otkach/PycharmProjects/whatsonpizza/dataset/images/')
-    parser.add_argument('--num-classes',   type=int, default=6)
-    parser.add_argument('--lr',            type=float, default=0.001)
-    parser.add_argument('--num-epoch',     type=int, default=2)
-    parser.add_argument('--kv-store',      type=str, default='device', help='the kvstore type')
-    parser.add_argument('--save-result',   type=str, help='the save path', default='/Users/otkach/PycharmProjects/whatsonpizza/')
-    parser.add_argument('--num-examples',  type=int, default=20000)
-    parser.add_argument('--mom',           type=float, default=0.9, help='momentum for sgd')
-    parser.add_argument('--wd',            type=float, default=0.0001, help='weight decay for sgd')
-    parser.add_argument('--save-name',     type=str, help='the save name of model', default='model')
+    parser.add_argument('--model',         type=str, default=os.environ['model'], required=False)
+    parser.add_argument('--gpus',          type=str, default=os.environ['gpus'])
+    parser.add_argument('--batch-size',    type=int, default=int(os.environ['batch-size']))
+    parser.add_argument('--epoch',         type=int, default=int(os.environ['epoch']))
+    parser.add_argument('--image-shape',   type=str, default=os.environ['image-shape'])
+    parser.add_argument('--data-train',    type=str, default=os.environ['data-train'])
+    parser.add_argument('--image-train',   type=str, default=os.environ['image-train'])
+    parser.add_argument('--data-val',      type=str, default=os.environ['data-val'])
+    parser.add_argument('--image-val',     type=str, default=os.environ['image-val'])
+    parser.add_argument('--num-classes',   type=int, default=int(os.environ['num-classes']))
+    parser.add_argument('--lr',            type=float, default=float(os.environ['lr']))
+    parser.add_argument('--num-epoch',     type=int, default=int(os.environ['num-epoch']))
+    parser.add_argument('--kv-store',      type=str, default=os.environ['kv-store'], help='the kvstore type')
+    parser.add_argument('--save-result',   type=str, default=os.environ['save-result'], help='the save path')
+    parser.add_argument('--num-examples',  type=int, default=int(os.environ['num-examples']))
+    parser.add_argument('--mom',           type=float, default=float(os.environ['mom']), help='momentum for sgd')
+    parser.add_argument('--wd',            type=float, default=float(os.environ['wd']), help='weight decay for sgd')
+    parser.add_argument('--save-name',     type=str, default=os.environ['save-name'], help='the save name of model')
     args = parser.parse_args()
 
     logger = logging.getLogger()
@@ -157,4 +162,3 @@ if __name__ == '__main__':
     logging.info(args)
 
     train_model(model=args.model, gpus=args.gpus, epoch=args.epoch, num_epoch=args.num_epoch, kv=kv, num_class=args.num_classes)
-

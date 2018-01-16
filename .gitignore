@@ -1,2 +1,4 @@
-dataset_18K
-snapshots
+dataset_18K/images/
+snapshots/
+*.pyc
+.vscode/tags

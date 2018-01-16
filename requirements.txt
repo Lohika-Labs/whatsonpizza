@@ -1,0 +1,5 @@
+mxnet-cu90mkl
+ipdb
+python-dotenv==0.7.1
+pylint==1.8.1
+graphviz==0.8.1
