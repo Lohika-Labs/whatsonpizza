@@ -5,7 +5,10 @@ import time
 
 from flask import (Flask,
                    make_response,
-                   render_template)
+                   redirect,
+                   render_template,
+                   request
+                  )
 
 from flask_httpauth import HTTPBasicAuth
 
@@ -62,6 +65,14 @@ def images_page():
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
     return response
+
+@app.route('/p/', methods=['POST'])
+@app.route('/p', methods=['POST'])
+@auth.login_required
+def p_page():
+    payload = request.values.to_dict()
+    classifier.classify_image(payload)
+    return redirect('/')
 
 
 if __name__ == '__main__':

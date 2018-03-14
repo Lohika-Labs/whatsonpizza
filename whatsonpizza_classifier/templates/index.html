@@ -21,23 +21,26 @@
 </head>
 <body>
 <div class="status"></div>
-<div class="images"></div>
+
+<form id="target" action="/p" method="post">
+    <div class="images"></div>
+
 <div class="option-list">
 {% for option in options %}
 <div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="{{ option.id }}">
+  <input class="form-check-input" type="checkbox" name="{{ option.text }}" value="1" id="{{ option.id }}">
   <label class="form-check-label" for="{{ option.id }}">
     {{ option.text }}
-    <img src="{{ option.image_url }}" alt="option.altname">
+    <img src="{{ option.image_url }}" alt="{{ option.altname }}">
   </label>
 </div>
 {% endfor %}
 </div>
 <span class="buttons">
-<button type="button" class="btn btn-success">Back (Restore)</button>
-<button type="button" class="btn btn-danger">Submit (Classify)</button>
+    <!-- <button type="button" class="btn btn-success">Back (Restore)</button> -->
+    <input class="btn btn-warning" type="submit" value="Submit (Classify)">
 </span>
-
+</form>
 <script>
  $( document ).ready(function() {
     Boot();

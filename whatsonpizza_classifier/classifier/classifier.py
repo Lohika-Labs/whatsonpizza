@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 from base64 import urlsafe_b64encode
 from glob import glob
 from tempfile import mkstemp
@@ -8,7 +9,10 @@ import requests
 from PIL import Image
 
 BASEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '')
-DATASET_DIR = os.path.join(BASEDIR, '..', 'dataset_18k', 'unclassified', '')
+DATASET_BASE = os.path.join(BASEDIR, '..', 'dataset_18k')
+DATASET_DIR = os.path.join(DATASET_BASE, 'unclassified', '')
+DATASET_CLASSIFIED = os.path.join(DATASET_BASE, 'classified', '')
+DATASET_CATEGORIZED = os.path.join(DATASET_BASE, 'categorized', '')
 TAXONOMY_DIR = os.path.join(BASEDIR, '..', 'taxonomy')
 TAXONOMY_FILE = os.path.join(TAXONOMY_DIR, 'pizza_types.json')
 TAXONOMY_IMAGES = os.path.join(TAXONOMY_DIR, 'images', '')
@@ -76,3 +80,28 @@ class Classifier(object):
                 image_url = '/option_image/' + text + '/' + os.path.basename(image_url[0])
             options.append({'text': text, 'id': oid, 'image_url': image_url})
         return options
+
+    def classify_image(self, payload):
+        classes = []
+        with open(TAXONOMY_FILE, 'r') as fh:
+            taxonomy = json.loads(fh.read()).get('pizza_types', [])
+        for obj_type in taxonomy:
+            name = obj_type.get('name', '')
+            if name and payload.get(name, ''):
+                classes.append(name)
+        if classes:
+            for cls in classes:
+                try:
+                    os.makedirs(os.path.join(DATASET_CATEGORIZED, cls))
+                except FileExistsError:
+                    pass
+                shutil.copy(os.path.join(DATASET_DIR, payload.get('image')), os.path.join(DATASET_CATEGORIZED, cls))
+
+                try:
+                    os.makedirs(os.path.join(DATASET_CLASSIFIED))
+                except FileExistsError:
+                    pass
+                shutil.copy(os.path.join(DATASET_DIR, payload.get('image')), os.path.join(DATASET_CLASSIFIED))
+
+                os.remove(os.path.join(DATASET_DIR, payload.get('image')))
+        return

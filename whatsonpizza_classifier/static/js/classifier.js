@@ -16,8 +16,7 @@ function ClassifierAPI() {
             html.push('<div class="col-sm-6 col-md-3"><span>' +
                             '<div class="thumbnail img">' +
                                   '<img src="/image/' + value +'">' +
-                                  '<div class="switch_btn btn </div>' +
-                                  '<input type="hidden" name="' + value + '" value="' + value + '">' +
+                                  '<input type="hidden" name="image" value="' + value + '">' +
                              '</div>' +
                       '</span></div>');
         });
