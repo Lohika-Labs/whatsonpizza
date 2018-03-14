@@ -2,4 +2,5 @@ flask
 flask-httpauth
 gunicorn
 pillow
+requests
 tornado
