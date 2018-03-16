@@ -103,5 +103,5 @@ class Classifier(object):
                     pass
                 shutil.copy(os.path.join(DATASET_DIR, payload.get('image')), os.path.join(DATASET_CLASSIFIED))
 
-                os.remove(os.path.join(DATASET_DIR, payload.get('image')))
+        os.remove(os.path.join(DATASET_DIR, payload.get('image')))
         return
