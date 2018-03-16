@@ -3,6 +3,9 @@
 import json
 import time
 
+from base64 import b64decode
+from tempfile import mkstemp
+
 from flask import (Flask,
                    make_response,
                    redirect,
@@ -37,9 +40,11 @@ def p_page():
                                                       "tensorflow": [{"value": 0.75, "name": "quattro stagioni"}]
 
                } 
-    payload = request.values.to_dict()
-    form = request.form
-    print (payload, form)
+    tmp = mkstemp()[1]
+    with open(tmp, 'wb') as fh:
+        content = b64decode(request.data)
+        fh.write(content)
+        print (tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
     return response
@@ -47,4 +52,4 @@ def p_page():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=6000, debug=True)

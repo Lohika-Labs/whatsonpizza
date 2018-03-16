@@ -15,7 +15,7 @@ max_requests = 128
 # A base to use with setproctitle for process naming.
 proc_name = 'whatsonpizza_backend'
 # A filename to use for the PID file.
-pidfile = '/tmp/wc.pid'
+pidfile = '/tmp/wb.pid'
 # Daemonize the Gunicorn process. Not for Supervisord.
 # daemon = True
 # Logging
