@@ -33,6 +33,15 @@ function ClassifierAPI() {
     };
 }
 
+$( document ).ready(function() {
+    console.log("ready");
+    $('.class-image').mouseover( function(e){
+        $('.images_example img')[0].src = e.target.src;
+    });
+    $('.class-image').click( function(e){
+        $('.class-image').closest(".form-check").find(".form-check-input")[0].click();
+    })
+});
 
 function Boot() {
     classifier = new ClassifierAPI();
