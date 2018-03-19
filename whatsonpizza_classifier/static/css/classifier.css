@@ -30,6 +30,9 @@ div.option-list {margin-left: 620px; position: absolute; top: 20px; }
 .images, .images_example{
    height: 330px;
 }
+.images_example{
+   margin-top: 335px;
+}
 .left {
     position:fixed;
     width:40%;
