@@ -20,9 +20,9 @@ div.option-list {margin-left: 620px; position: absolute; top: 20px; }
 .form-check {
     position: relative;
     display: block;
-    padding-right: 1.25rem;
+    padding:0!important;
     float: left;
-    min-height: 170px;
+    height: 100px;
 }
 .images img, .images_example img{
     max-height: 330px;
