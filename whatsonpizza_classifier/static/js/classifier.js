@@ -39,7 +39,7 @@ $( document ).ready(function() {
         $('.images_example img')[0].src = e.target.src;
     });
     $('.class-image').click( function(e){
-        $('.class-image').closest(".form-check").find(".form-check-input")[0].click();
+        $(e.target).closest(".form-check").find(".form-check-input")[0].click();
     })
 });
 
