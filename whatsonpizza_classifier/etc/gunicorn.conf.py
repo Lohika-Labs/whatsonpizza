@@ -11,7 +11,7 @@ backlog = 64
 # Workers that are silent for more than seconds specified are killed and restarted.
 timeout = 60 * 3
 # restart every hour if request takes about 30 seconds to complete
-max_requests = 128
+max_requests = 1
 # A base to use with setproctitle for process naming.
 proc_name = 'whatsonpizza_classifier'
 # A filename to use for the PID file.

@@ -45,6 +45,7 @@ class Classifier(object):
         im.save(tmp + '_thumbnail.jpg', "JPEG")
         with open(tmp + '_thumbnail.jpg', 'rb') as src:
             data = src.read()
+        os.remove(tmp)
         os.remove(tmp + '_thumbnail.jpg')
         return data
 
