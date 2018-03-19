@@ -42,11 +42,12 @@ class Classifier(object):
         tmp = mkstemp()[1]
         im = Image.open(filename)
         im.thumbnail((600, 600), Image.ANTIALIAS)
-        im.save(tmp + '_thumbnail.jpg', "JPEG")
-        with open(tmp + '_thumbnail.jpg', 'rb') as src:
+        im.save(tmp, "JPEG")
+        im.close()
+        with open(tmp, 'rb') as src:
             data = src.read()
+            src.close()
         os.remove(tmp)
-        os.remove(tmp + '_thumbnail.jpg')
         return data
 
     def render_missing_image(self):
