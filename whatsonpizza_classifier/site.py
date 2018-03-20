@@ -61,7 +61,7 @@ def images_page():
     data = {}
     data['data'] = classifier.get_images()
     data['username'] = username
-    data['progress'] = {}#classifier.get_progress(username)
+    data['progress'] = classifier.get_progress(username)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
     return response
@@ -76,4 +76,4 @@ def p_page():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5110, debug=True)

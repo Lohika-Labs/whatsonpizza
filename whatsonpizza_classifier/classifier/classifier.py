@@ -18,6 +18,9 @@ TAXONOMY_FILE = os.path.join(TAXONOMY_DIR, 'pizza_types.json')
 TAXONOMY_IMAGES = os.path.join(TAXONOMY_DIR, 'images', '')
 
 class Classifier(object):
+    def get_progress(self, username):
+        return {'processed': len(glob(DATASET_CLASSIFIED + '*.jpg')), 'queue_max': len(glob(DATASET_DIR + '*.jpg'))}
+
     def get_images(self, limit=1):
         image_list = []
         for dirpath, dirnames, fnames in os.walk(DATASET_DIR):
