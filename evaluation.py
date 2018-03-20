@@ -3,7 +3,7 @@ ctx = mx.cpu()
 import json
 from crossentropy import *
 
-TEST_DIR = 'data_18K/test_data.lst'
+TEST_DIR = 'dataset_18K/test_data.lst'
 IMG_DIR = 'dataset_18K/images/'
 # batch_size = 64
 batch_size = 1

@@ -7,10 +7,13 @@ import matplotlib.image as mpimg
 from random import randint
 import os.path
 
+from PIL import Image
+Image.Image.tostring = Image.Image.tobytes
+
 
 MODEL = 'snapshots/multilabel-resnet-50'
 IMG_DIR = 'dataset_18K/images/'
-CAT_DIR = "data_18K/cats.txt"
+CAT_DIR = "dataset_18K/cats.txt"
 ctx = mx.cpu()
 
 
@@ -45,7 +48,7 @@ for ind in range(1, 18728):
     if os.path.isfile(IMG):
         ndar = prepareNDArray(IMG)
         label_ph = mx.nd.zeros((1,52))
-        mod = loadmodel(MODEL, 11, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1,52))])
+        mod = loadmodel(MODEL, 1, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1,52))])
 
         Batch = namedtuple('Batch', ['data', 'label'])
         mod.forward(Batch([ndar], [label_ph]))

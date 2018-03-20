@@ -24,7 +24,7 @@ def cats(jsn):
             )
 
 def save_cats(cats):
-    with open('./data_18K/cats.txt', 'w') as f:
+    with open('./dataset_18K/cats.txt', 'w') as f:
         for cat in cats:
             f.write(cat + '\n')
 
@@ -72,9 +72,9 @@ def gen_files():
     ntrain = int(len(ALL) * 0.8)
     nval = int(len(ALL) * 0.9)
 
-    writefile('./data_18K/train_data', ALL[:ntrain])
-    writefile('./data_18K/val_data', ALL[ntrain:nval])
-    writefile('./data_18K/test_data', ALL[nval:])
+    writefile('./dataset_18K/train_data', ALL[:ntrain])
+    writefile('./dataset_18K/val_data', ALL[ntrain:nval])
+    writefile('./dataset_18K/test_data', ALL[nval:])
 
 
 move_corrupt(IMG_DIR)

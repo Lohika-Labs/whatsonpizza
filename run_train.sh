@@ -1,4 +1,4 @@
-python train_multilabel.py \
+python2.7 train_multilabel.py \
 --epoch 0 \
 --model model/resnet-50 \
 --batch-size 64 \
@@ -11,5 +11,6 @@ python train_multilabel.py \
 --lr 0.001 \
 --num-epoch 15 \
 --save-result snapshots/ \
---save-name multilabel-resnet-50 \
---gpus 0,1
+--save-name multilabel-resnet-50 
+#\
+#--gpus 0,1

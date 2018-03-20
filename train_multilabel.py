@@ -92,14 +92,15 @@ def train_model(params):
         'momentum': params.mom,
         'wd': params.wd,
         'lr_scheduler': lr_scheduler
+
     }
     initializer = mx.init.Xavier(
         rnd_type='gaussian', factor_type="in", magnitude=2)
 
-    if params.gpus:
-        devs = [mx.gpu(int(dev_id)) for dev_id in params.gpus.split(',')]
-    else:
-        devs = mx.cpu()
+    #if params.gpus:
+    #    devs = [mx.gpu(int(dev_id)) for dev_id in params.gpus.split(',')]
+    #else:
+    devs = mx.cpu()
 
     model = mx.mod.Module(context=devs, symbol=new_sym)
 
