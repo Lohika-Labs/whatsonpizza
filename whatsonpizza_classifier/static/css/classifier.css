@@ -1,0 +1,45 @@
+html{box-sizing: border-box}
+span.buttons {
+
+    position: fixed;
+}
+.images{position:fixed}
+div.option-list {margin-left: 620px; position: absolute; top: 20px; }
+.class-image{max-width: 200px}
+.class-cb {
+    position: absolute;
+    top: 0;
+    left: 45px;
+    color: white;
+    text-shadow:
+   -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+}
+.form-check {
+    position: relative;
+    display: block;
+    padding:0!important;
+    float: left;
+    height: 100px;
+}
+.images img, .images_example img{
+    max-height: 330px;
+}
+.images, .images_example{
+   height: 330px;
+}
+.images_example{
+   margin-top: 335px;
+}
+.left {
+    position:fixed;
+    width:40%;
+    float:left;
+}
+.right {
+    width:40%;
+    float:right;
+}
+.status{display:none;}
