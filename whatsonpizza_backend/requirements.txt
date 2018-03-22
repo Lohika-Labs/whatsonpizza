@@ -4,3 +4,4 @@ gunicorn
 pillow
 requests
 tornado
+mxnet==1.1.0
