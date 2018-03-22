@@ -34,22 +34,19 @@ def index_page():
 @app.route('/p/', methods=['POST'])
 @app.route('/p', methods=['POST'])
 def p_page():
-    data = {"status": "ok", "status_message": "", "mxnet": [{
-                                                                   "value": 0.75,
-                                                                   "name": "quattro formaggi"}, {"value": 0.98, "name": "margherita"}],
-
-                                                      "tensorflow": [{"value": 0.75, "name": "quattro stagioni"}]
-
-               } 
+    data = {"status": "ok", "status_message": "", "tensorflow": [{"value": 0.75, "name": "quattro stagioni"}]
+    }
     tmp = mkstemp()[1]
     with open(tmp, 'wb') as fh:
         content = b64decode(request.data)
         fh.write(content)
         fh.close()
-    print (tmp, backend.mxnet_analyze_image(tmp))
+    data['mxnet'] = []
+    data['mxnet'].append(backend.mxnet_analyze_image(tmp))
     os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
+    print (data)
     return response
 
 
