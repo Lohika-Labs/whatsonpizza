@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import time
 
 from base64 import b64decode
@@ -44,7 +45,9 @@ def p_page():
     with open(tmp, 'wb') as fh:
         content = b64decode(request.data)
         fh.write(content)
-        print (tmp)
+        fh.close()
+    print (tmp, backend.mxnet_analyze_image(tmp))
+    os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
     return response
