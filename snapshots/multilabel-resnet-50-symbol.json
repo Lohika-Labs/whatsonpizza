@@ -3825,37 +3825,30 @@
     {
       "op": "null", 
       "name": "fc_weight", 
-      "attrs": {"num_hidden": "52"}, 
+      "attrs": {"num_hidden": "24"}, 
       "inputs": []
     }, 
     {
       "op": "null", 
       "name": "fc_bias", 
-      "attrs": {"num_hidden": "52"}, 
+      "attrs": {"num_hidden": "24"}, 
       "inputs": []
     }, 
     {
       "op": "FullyConnected", 
       "name": "fc", 
-      "attrs": {"num_hidden": "52"}, 
+      "attrs": {"num_hidden": "24"}, 
       "inputs": [[430, 0, 0], [431, 0, 0], [432, 0, 0]]
-    }, 
-    {
-      "op": "sigmoid", 
-      "name": "sig", 
-      "inputs": [[433, 0, 0]]
     }, 
     {
       "op": "null", 
       "name": "softmax_label", 
-      "attrs": {"op_type": "CrossEntropyLoss"}, 
       "inputs": []
     }, 
     {
-      "op": "Custom", 
+      "op": "SoftmaxOutput", 
       "name": "softmax", 
-      "attrs": {"op_type": "CrossEntropyLoss"}, 
-      "inputs": [[434, 0, 0], [435, 0, 0]]
+      "inputs": [[433, 0, 0], [434, 0, 0]]
     }
   ], 
   "arg_nodes": [
@@ -4119,7 +4112,7 @@
     426, 
     431, 
     432, 
-    435
+    434
   ], 
   "node_row_ptr": [
     0, 
@@ -4558,9 +4551,8 @@
     535, 
     536, 
     537, 
-    538, 
-    539
+    538
   ], 
-  "heads": [[436, 0, 0]], 
+  "heads": [[435, 0, 0]], 
   "attrs": {"mxnet_version": ["int", 10100]}
 }
