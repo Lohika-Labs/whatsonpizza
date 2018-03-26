@@ -91,6 +91,7 @@ def predict(img):
     #with open('categories.txt', 'r') as f:
     #    cats = [l.rstrip() for l in f]
     cats = get_cats()
+    print (cats)
     tp = 0.0
     fp = 0.0
     tn = 0.0

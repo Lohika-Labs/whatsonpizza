@@ -33,7 +33,7 @@ class TFClassifier(object):
 
 class TFBackend(object):
     def __init__(self):
-        pass
+        self.classifier = TFClassifier(os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5'), self.read_label_map())
 
     @staticmethod
     def read_label_map():
@@ -46,9 +46,8 @@ class TFBackend(object):
         return label_map
 
     def tensorflow_predict_image(self, image_path):
-        tf_classifier = TFClassifier(os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5'), self.read_label_map())
         img = image.load_img(image_path,
                              target_size=(299, 299))
         img = image.img_to_array(img)
-        results = tf_classifier.predict(img)
+        results = self.classifier.predict(img)
         return results
