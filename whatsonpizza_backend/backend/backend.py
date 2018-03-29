@@ -4,6 +4,7 @@ from .common import PROJECT_BASE
 from .demo import predict
 from .tfclassifier import TFBackend
 
+
 class Backend(object):
     def __init__(self):
         self.tf = TFBackend()

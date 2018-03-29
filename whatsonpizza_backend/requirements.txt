@@ -5,3 +5,7 @@ pillow
 requests
 eventlet
 mxnet==1.1.0
+opencv-python
+keras
+tensorflow
+h5py
