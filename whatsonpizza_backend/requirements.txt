@@ -3,4 +3,9 @@ flask-httpauth
 gunicorn
 pillow
 requests
-tornado
+eventlet
+mxnet==1.1.0
+opencv-python
+keras
+tensorflow
+h5py

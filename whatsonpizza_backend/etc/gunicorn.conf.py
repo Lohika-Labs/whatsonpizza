@@ -3,9 +3,9 @@ import multiprocessing
 # Server socket
 bind = "0.0.0.0:6000"
 # Number of workers
-workers = multiprocessing.cpu_count() * 2 + 1
+workers = 1 #multiprocessing.cpu_count() * 2 + 1
 # The type of workers to use
-worker_class = "tornado"
+worker_class = "eventlet"
 # Number of pending connections
 backlog = 64
 # Workers that are silent for more than seconds specified are killed and restarted.

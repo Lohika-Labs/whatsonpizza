@@ -1,5 +1,8 @@
+categorized/
+dataset_18K/images
 dataset_18K/images/
-snapshots/
 *.pyc
 .vscode/tags
 .vscode/.rope*
+.idea
+.DS_Store

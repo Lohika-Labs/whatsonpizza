@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import time
 
 from base64 import b64decode
@@ -33,23 +34,20 @@ def index_page():
 @app.route('/p/', methods=['POST'])
 @app.route('/p', methods=['POST'])
 def p_page():
-    data = {"status": "ok", "status_message": "", "mxnet": [{
-                                                                   "value": 0.75,
-                                                                   "name": "quattro formaggi"}, {"value": 0.98, "name": "margherita"}],
-
-                                                      "tensorflow": [{"value": 0.75, "name": "quattro stagioni"}]
-
-               } 
+    data = {"status": "ok", "status_message": ""}
     tmp = mkstemp()[1]
     with open(tmp, 'wb') as fh:
         content = b64decode(request.data)
         fh.write(content)
-        print (tmp)
+        fh.close()
+    data['mxnet'] = backend.mxnet_analyze_image(tmp)
+    data['tensorflow'] = backend.tensorflow_analyze_image(tmp)
+    os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
+    print (data)
     return response
 
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6000, debug=True)
+    app.run(host='0.0.0.0', port=6000, debug=False)
