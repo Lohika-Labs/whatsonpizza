@@ -13,7 +13,7 @@ Image.Image.tostring = Image.Image.tobytes
 
 from .common import PROJECT_BASE, TAXONOMY_FILE
 
-MODEL = PROJECT_BASE + 'snapshots/multilabel-resnet-50'
+MODEL = PROJECT_BASE + 'snapshots/model/resnet-152'
 #MODEL = 'snapshots/multilabel-resnet-50'
 #IMG_DIR = '/Users/bturkynewych/Downloads/Whatson_pizza/tmp/w1/dataset_18K/images' #'categorized/'
 #CAT_DIR = "categories.txt"

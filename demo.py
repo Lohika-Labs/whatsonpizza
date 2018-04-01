@@ -1,68 +1,47 @@
-import cv2
-from crossentropy import *
 import mxnet as mx
+import cv2
+import numpy as np
+# define a simple data batch
 from collections import namedtuple
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from random import randint
-import os.path
-
 from PIL import Image
+
+Batch = namedtuple('Batch', ['data'])
 Image.Image.tostring = Image.Image.tobytes
 
-
-MODEL = 'snapshots/multilabel-resnet-50'
-IMG_DIR = 'dataset_18K/images/'
-CAT_DIR = "dataset_18K/cats.txt"
+MODEL = 'model/resnet-152'
 ctx = mx.cpu()
 
-
-def gen_id():
-    return randint(1, 18728)
-
-def loadmodel(modelname, n, dshapes, lshapes):
-    sym, arg_params, aux_params = mx.model.load_checkpoint(modelname, n)
-    mod = mx.mod.Module(symbol=sym, context=ctx)
-    mod.bind(for_training=False, data_shapes=dshapes, label_shapes=lshapes)
-    arg_params['prob_label'] = mx.nd.array([0])
-    mod.set_params(arg_params, aux_params)
-    return mod
+sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 0)
+mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
+mod.bind(for_training=False, data_shapes=[('data', (1,3,224,224))],
+         label_shapes=mod._label_shapes)
+mod.set_params(arg_params, aux_params, allow_missing=True)
 
 
-def prepareNDArray(filename):
-    img = cv2.imread(filename)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (224, 224,))
+def get_image(url):
+    # download and show the image
+    fname = mx.test_utils.download(url)
+    img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)
+    if img is None:
+        return None
+    # convert into format (batch, RGB, width, height)
+    img = cv2.resize(img, (224, 224))
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
-    return mx.nd.array(img)
+    return img
 
 
-raw = open(CAT_DIR).read()
-cats = raw.split('\n')
+def predict(url):
+    img = get_image(url)
+    # compute the predict probabilities
+    mod.forward(Batch([mx.nd.array(img)]))
+    prob = mod.get_outputs()[0].asnumpy()
+    # print the top-5
+    prob = np.squeeze(prob)
+    a = np.argsort(prob)[::-1]
+    #for i in a[0:5]:
+    print('probability=%f' % (prob[a[0]]))
 
-for ind in range(1, 18728):
-    IMG = IMG_DIR + str(randint(1, 18728)) + '.jpg'
-    print IMG
-    if os.path.isfile(IMG):
-        ndar = prepareNDArray(IMG)
-        label_ph = mx.nd.zeros((1,52))
-        mod = loadmodel(MODEL, 1, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1,52))])
 
-        Batch = namedtuple('Batch', ['data', 'label'])
-        mod.forward(Batch([ndar], [label_ph]))
-        prob = mod.get_outputs()[0][0]
-
-        ing_inds = []
-        for ind in range(52):
-            if prob[ind] >= 0.5:
-                ing_inds.append(ind)
-
-        for ind in ing_inds:
-            print cats[ind]
-
-        image = mpimg.imread(IMG)
-        plt.imshow(image)
-        plt.show()
-        break
+predict('http://images.pizza33.ua/products/product/POCpLYdcgVA34bcde4pK8JEjSWITKbtk.jpg')
