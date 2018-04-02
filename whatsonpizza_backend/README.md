@@ -2,15 +2,12 @@
 
 Pizza images backend
 
-## Docker build image
+## Running using Docker
 
-`docker image build -t mxnet_lab .`
+`./run_docker.sh`
 
-
-## Docker run image
-
-`docker run -it mxnet_lab .`
-
+Wait few minutes to boot up (MacBook Pro (i7, Early 2015) - about 7 minutes)
+then go to http://localhost:5000 - you're all set.
 
 ## Installation
 

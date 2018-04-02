@@ -1,9 +1,10 @@
 import multiprocessing
 
 # Server socket
-bind = "0.0.0.0:6000"
+bind = "0.0.0.0:5000"
 # Number of workers
-workers = 1 #multiprocessing.cpu_count() * 2 + 1
+workers = 4
+# multiprocessing.cpu_count()
 # The type of workers to use
 worker_class = "eventlet"
 # Number of pending connections
