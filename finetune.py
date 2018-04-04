@@ -22,7 +22,7 @@ def download(url):
         urlretrieve(url, filename)
 
 
-def get_iterators(batch_size, data_shape=(3, 50, 50)):
+def get_iterators(batch_size, data_shape=(3, 224, 224)):
     train = mx.io.ImageRecordIter(
         path_imgrec='./categorized-train.rec',
         data_name='data',
