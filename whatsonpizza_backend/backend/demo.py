@@ -15,13 +15,13 @@ from .common import PROJECT_BASE, TAXONOMY_FILE
 
 MODEL = PROJECT_BASE + 'snapshots/model/resnet-152'
 
-CAT_NUM = 10
-NDAR_ZEROS = 10
-LABEL_SHP = 10
+CAT_NUM = 24
+NDAR_ZEROS = 24
+LABEL_SHP = 24
 
 
 BCH_SZ = 1
-CLS_NUM = 10
+CLS_NUM = 24
 
 
 def loadmodel(modelname, n, dshapes, lshapes):
