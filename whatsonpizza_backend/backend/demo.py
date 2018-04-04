@@ -36,7 +36,7 @@ def loadmodel(modelname, n, dshapes, lshapes):
 def prepareNDArray(filename):
     img = cv2.imread(filename)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (50, 50,))
+    img = cv2.resize(img, (224, 224,))
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]

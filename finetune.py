@@ -71,6 +71,8 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
             optimizer_params={'learning_rate': 0.01},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric='acc')
+    mod.symbol.save("resnet-152-symbol.json")
+    mod.save_params("resnet-152.params")
     metric = mx.metric.Accuracy()
     return mod.score(val, metric)
 
