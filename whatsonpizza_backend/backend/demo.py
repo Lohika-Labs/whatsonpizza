@@ -14,17 +14,14 @@ Image.Image.tostring = Image.Image.tobytes
 from .common import PROJECT_BASE, TAXONOMY_FILE
 
 MODEL = PROJECT_BASE + 'snapshots/model/resnet-152'
-#MODEL = 'snapshots/multilabel-resnet-50'
-#IMG_DIR = '/Users/bturkynewych/Downloads/Whatson_pizza/tmp/w1/dataset_18K/images' #'categorized/'
-#CAT_DIR = "categories.txt"
 
-CAT_NUM = 24
-NDAR_ZEROS = 24
-LABEL_SHP = 24
+CAT_NUM = 10
+NDAR_ZEROS = 10
+LABEL_SHP = 10
 
 
 BCH_SZ = 1
-CLS_NUM = 24
+CLS_NUM = 10
 
 
 def loadmodel(modelname, n, dshapes, lshapes):
@@ -78,6 +75,7 @@ def get_image(url):
     img = img[np.newaxis, :]
     return img
 
+
 def get_cats():
     cats = []
     taxonomy = json.loads(open(TAXONOMY_FILE, 'r').read())
@@ -85,6 +83,7 @@ def get_cats():
     for ptype in taxonomy.get('pizza_types'):
         cats.append(ptype.get('name'))
     return cats
+
 
 def predict(img):
     #raw = open(CAT_DIR).read()
