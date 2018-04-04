@@ -99,7 +99,7 @@ def predict(img):
     if os.path.exists(img):
         ndar = prepareNDArray(img)
         label_ph = mx.nd.zeros((1, NDAR_ZEROS))
-        mod = loadmodel(MODEL, 2, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
+        mod = loadmodel(MODEL, 0, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
         Batch = namedtuple('Batch', ['data', 'label'])
         mod.forward(Batch([ndar], [label_ph]))
         prob = mod.get_outputs()[0].asnumpy()
