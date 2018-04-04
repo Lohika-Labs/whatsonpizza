@@ -1,27 +1,30 @@
 from PIL import ImageFile
 from keras import optimizers
 from keras.applications.inception_v3 import InceptionV3
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.applications.resnet50 import ResNet50
+from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 from keras.layers import Dense, GlobalAveragePooling2D, Dropout, Flatten
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-num_classes = 21
+num_classes = 10
 
 img_width, img_height = 299, 299
-train_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/small/augmented_train"
-validation_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/small/test"
-nb_train_samples = 28665
-nb_validation_samples = 910
-batch_size = 256
+train_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/large_pruned/augmented_train"
+validation_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/large_pruned/test"
+nb_train_samples = 81326
+nb_validation_samples = 1937
+batch_size = 32
+
+
 epochs = 150
 
-base_model = InceptionV3(weights='imagenet', include_top=False, input_shape = (img_width, img_height, 3))
+base_model = ResNet50(weights='imagenet', include_top=False, input_shape = (img_width, img_height, 3))
 
 for layer in base_model.layers:
-    layer.trainable = False
+    layer.trainable = True
 
 
 x = base_model.output
@@ -32,7 +35,7 @@ x = Dense(1024, activation="relu")(x)
 predictions = Dense(num_classes, activation='softmax')(x)
 
 model = Model(inputs=base_model.input, outputs=predictions)
-model.compile(loss="categorical_crossentropy", optimizer = optimizers.SGD(lr=0.0001, momentum=0.9), metrics=["accuracy"])
+model.compile(loss="categorical_crossentropy", optimizer = optimizers.SGD(lr=0.001, momentum=0.9), metrics=["accuracy"])
 
 
 train_datagen = ImageDataGenerator(
@@ -80,6 +83,10 @@ early = EarlyStopping(monitor='val_acc', min_delta=0, patience=50, verbose=1, mo
 #csv_logger = CSVLogger('model4.log')
 
 
+tensorboard = TensorBoard(log_dir='/tmp/tb_logs/3', histogram_freq=2, write_graph=True, write_images=False)
+tensorboard.set_model(model)
+
+
 model.fit_generator(
     train_generator,
     steps_per_epoch=nb_train_samples/batch_size,
@@ -87,7 +94,7 @@ model.fit_generator(
     epochs=epochs,
     use_multiprocessing=True,
     validation_data=validation_generator,
-    callbacks=[checkpoint, early])
+    callbacks=[checkpoint, early, tensorboard])
 
 
 
