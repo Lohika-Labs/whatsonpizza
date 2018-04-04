@@ -105,10 +105,10 @@ def generate_image_seq(image, num_samples):
 
 
 if __name__ == '__main__':
-    input_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/small/train"
-    output_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/small/augmented_train"
+    input_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/large_pruned/train"
+    output_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/large_pruned/augmented_train"
 
-    num_augmentations = 10
+    num_augmentations = 15
 
     image_dirs = glob.glob(input_dir + "/*")
     # category dir -> category files
