@@ -11,8 +11,8 @@ else:
     from urllib import urlretrieve
 
 num_classes = 10
-batch_per_gpu = 10
-num_gpus = 1
+batch_per_gpu = 128
+num_gpus = 2
 batch_size = batch_per_gpu * num_gpus
 
 
@@ -22,7 +22,7 @@ def download(url):
         urlretrieve(url, filename)
 
 
-def get_iterators(batch_size, data_shape=(3, 50, 50)):
+def get_iterators(batch_size, data_shape=(3, 224, 224)):
     train = mx.io.ImageRecordIter(
         path_imgrec='./categorized-train.rec',
         data_name='data',
@@ -33,7 +33,7 @@ def get_iterators(batch_size, data_shape=(3, 50, 50)):
         rand_crop=True,
         rand_mirro=True)
     val = mx.io.ImageRecordIter(
-        path_imgrec='./categorized-val.rec',
+        path_imgrec='./categorized-val_train.rec',
         data_name='data',
         label_name='softmax_label',
         batch_size=batch_size,
@@ -59,7 +59,7 @@ def get_finetune(symbol, arg_params, num_classes, layer_name="flatten0"):
 
 def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=symbol, context=mx.cpu())
+    mod = mx.mod.Module(symbol=symbol, context=devs)
     mod.fit(train, val,
             num_epoch=8,
             arg_params=arg_params,

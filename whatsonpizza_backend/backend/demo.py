@@ -14,9 +14,6 @@ Image.Image.tostring = Image.Image.tobytes
 from .common import PROJECT_BASE, TAXONOMY_FILE
 
 MODEL = PROJECT_BASE + 'snapshots/model/resnet-152'
-#MODEL = 'snapshots/multilabel-resnet-50'
-#IMG_DIR = '/Users/bturkynewych/Downloads/Whatson_pizza/tmp/w1/dataset_18K/images' #'categorized/'
-#CAT_DIR = "categories.txt"
 
 CAT_NUM = 24
 NDAR_ZEROS = 24
@@ -78,6 +75,7 @@ def get_image(url):
     img = img[np.newaxis, :]
     return img
 
+
 def get_cats():
     cats = []
     taxonomy = json.loads(open(TAXONOMY_FILE, 'r').read())
@@ -85,6 +83,7 @@ def get_cats():
     for ptype in taxonomy.get('pizza_types'):
         cats.append(ptype.get('name'))
     return cats
+
 
 def predict(img):
     #raw = open(CAT_DIR).read()
@@ -100,7 +99,7 @@ def predict(img):
     if os.path.exists(img):
         ndar = prepareNDArray(img)
         label_ph = mx.nd.zeros((1, NDAR_ZEROS))
-        mod = loadmodel(MODEL, 2, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
+        mod = loadmodel(MODEL, 0, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
         Batch = namedtuple('Batch', ['data', 'label'])
         mod.forward(Batch([ndar], [label_ph]))
         prob = mod.get_outputs()[0].asnumpy()
