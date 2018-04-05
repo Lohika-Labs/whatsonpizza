@@ -11,8 +11,8 @@ else:
     from urllib import urlretrieve
 
 num_classes = 10
-batch_per_gpu = 1
-num_gpus = 2
+batch_per_gpu = 128
+num_gpus = 1
 batch_size = batch_per_gpu * num_gpus
 
 
@@ -59,7 +59,7 @@ def get_finetune(symbol, arg_params, num_classes, layer_name="flatten0"):
 
 def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=symbol, context=mx.gpu(1))
+    mod = mx.mod.Module(symbol=symbol, context=mx.gpu(0))
     mod.fit(train, val,
             num_epoch=50,
             arg_params=arg_params,
@@ -72,8 +72,6 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
             optimizer_params={'learning_rate': 0.01},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric='acc')
-    #mod.symbol.save("resnet-152-symbol.json")
-    #mod.save_params("resnet-152.params")
     metric = mx.metric.Accuracy()
     return mod.score(val, metric)
 
