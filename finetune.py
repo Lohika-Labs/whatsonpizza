@@ -59,7 +59,7 @@ def get_finetune(symbol, arg_params, num_classes, layer_name="flatten0"):
 
 def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=symbol, context=devs)
+    mod = mx.mod.Module(symbol=symbol, context=mx.gpu(0))
     mod.fit(train, val,
             num_epoch=50,
             arg_params=arg_params,
