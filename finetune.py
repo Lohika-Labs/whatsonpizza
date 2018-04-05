@@ -65,14 +65,15 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
             arg_params=arg_params,
             aux_params=aux_params,
             allow_missing=True,
-            batch_end_callback=mx.callback.Speedometer(batch_size, 10),
+            batch_end_callback=mx.callback.Speedometer(batch_size, 1),
+            epoch_end_callback=mx.callback.do_checkpoint("pizza_model", 1),
             kvstore='device',
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric='acc')
-    mod.symbol.save("resnet-152-symbol.json")
-    mod.save_params("resnet-152.params")
+    #mod.symbol.save("resnet-152-symbol.json")
+    #mod.save_params("resnet-152.params")
     metric = mx.metric.Accuracy()
     return mod.score(val, metric)
 
