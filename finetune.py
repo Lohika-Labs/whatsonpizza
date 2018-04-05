@@ -84,4 +84,4 @@ sym, arg_params, aux_params = mx.model.load_checkpoint('resnet-152', 0)
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = get_finetune(sym, arg_params, num_classes)
 mod_score = fit(new_sym, new_args, aux_params, train, val, batch_size, num_gpus)
-print mod_score
+print (mod_score)
