@@ -66,7 +66,7 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
             aux_params=aux_params,
             allow_missing=True,
             batch_end_callback=mx.callback.Speedometer(batch_size, 1),
-            epoch_end_callback=mx.callback.do_checkpoint("resnet-152", 1),
+            epoch_end_callback=mx.callback.do_checkpoint("resnet-50", 1),
             kvstore='device',
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01},
@@ -78,8 +78,8 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     return mod.score(val, metric)
 
 
-get_model('http://data.mxnet.io/models/imagenet-11k/resnet-152/resnet-152'.decode('utf-8'), 0)
-sym, arg_params, aux_params = mx.model.load_checkpoint('resnet-152'.decode("utf-8"), 0)
+get_model('http://data.mxnet.io/models/imagenet/resnet/50-layers/resnet-50', 0)
+sym, arg_params, aux_params = mx.model.load_checkpoint('resnet-50', 0)
 
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = get_finetune(sym, arg_params, num_classes)
