@@ -11,7 +11,7 @@ else:
     from urllib import urlretrieve
 
 num_classes = 10
-batch_per_gpu = 128
+batch_per_gpu = 1
 num_gpus = 2
 batch_size = batch_per_gpu * num_gpus
 
