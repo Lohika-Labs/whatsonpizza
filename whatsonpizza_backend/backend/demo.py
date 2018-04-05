@@ -13,7 +13,10 @@ Image.Image.tostring = Image.Image.tobytes
 
 from .common import PROJECT_BASE, TAXONOMY_FILE
 
-MODEL = PROJECT_BASE + 'snapshots/model/resnet-152'
+MODEL = PROJECT_BASE + 'snapshots/multilabel-resnet-50'
+#MODEL = 'snapshots/multilabel-resnet-50'
+#IMG_DIR = '/Users/bturkynewych/Downloads/Whatson_pizza/tmp/w1/dataset_18K/images' #'categorized/'
+#CAT_DIR = "categories.txt"
 
 CAT_NUM = 24
 NDAR_ZEROS = 24
@@ -36,7 +39,7 @@ def loadmodel(modelname, n, dshapes, lshapes):
 def prepareNDArray(filename):
     img = cv2.imread(filename)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (224, 224,))
+    img = cv2.resize(img, (50, 50,))
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
@@ -75,7 +78,6 @@ def get_image(url):
     img = img[np.newaxis, :]
     return img
 
-
 def get_cats():
     cats = []
     taxonomy = json.loads(open(TAXONOMY_FILE, 'r').read())
@@ -83,7 +85,6 @@ def get_cats():
     for ptype in taxonomy.get('pizza_types'):
         cats.append(ptype.get('name'))
     return cats
-
 
 def predict(img):
     #raw = open(CAT_DIR).read()
@@ -99,7 +100,7 @@ def predict(img):
     if os.path.exists(img):
         ndar = prepareNDArray(img)
         label_ph = mx.nd.zeros((1, NDAR_ZEROS))
-        mod = loadmodel(MODEL, 0, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
+        mod = loadmodel(MODEL, 2, dshapes=[('data', ndar.shape)], lshapes=[('softmax_label', (1, LABEL_SHP))])
         Batch = namedtuple('Batch', ['data', 'label'])
         mod.forward(Batch([ndar], [label_ph]))
         prob = mod.get_outputs()[0].asnumpy()
