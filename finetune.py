@@ -12,7 +12,7 @@ else:
 
 num_classes = 10
 batch_per_gpu = 128
-num_gpus = 2
+num_gpus = 1
 batch_size = batch_per_gpu * num_gpus
 
 
