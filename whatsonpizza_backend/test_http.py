@@ -2,6 +2,7 @@
 
 # std
 import json
+import sys
 
 # std from
 from base64 import b64encode
@@ -12,16 +13,20 @@ import requests
 
 URL='http://localhost:5000/p'
 
-def submit_file(filepath):
-    r = requests.post(URL, data=b64encode(open(filepath, 'rb').read()))
+def submit_file(filepath, url=URL):
+    r = requests.post(url, data=b64encode(open(filepath, 'rb').read()))
     result = json.loads(r.text)
     return result
 
-def submit_files(glob_path):
+def submit_files(glob_path, url=URL):
     result = []
     for img in glob(glob_path):
-        result.append(submit_file(img))
+        result.append(submit_file(img, url=url))
     return result
 
 if __name__ == '__main__':
-    print (submit_files('./testset/*.jpg'))
+    if len(sys.argv) > 1:
+        url = sys.argv[1]
+    else:
+        url = URL
+    print (submit_files('./testset/*.jpg', url=url))
