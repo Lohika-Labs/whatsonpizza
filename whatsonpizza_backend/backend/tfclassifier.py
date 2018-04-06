@@ -34,7 +34,8 @@ class TFClassifier(object):
 
 class TFBackend(object):
     def __init__(self):
-        self.classifier = TFClassifier(os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5'), self.read_label_map())
+        model = os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5')
+        self.classifier = TFClassifier(model, self.read_label_map())
 
     @staticmethod
     def read_label_map():
