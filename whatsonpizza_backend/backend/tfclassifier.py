@@ -13,6 +13,8 @@ import numpy as np
 
 from .common import TAXONOMY_FILE, PROJECT_BASE
 
+MODEL = os.path.join(PROJECT_BASE, 'models', 'tensorflow', 'inception_v3.h5')
+
 class TFClassifier(object):
     def __init__(self, model_path, labels_map):
         self.model = load_model(model_path)
@@ -34,8 +36,7 @@ class TFClassifier(object):
 
 class TFBackend(object):
     def __init__(self):
-        model = os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5')
-        self.classifier = TFClassifier(model, self.read_label_map())
+        self.classifier = TFClassifier(MODEL, self.read_label_map())
 
     @staticmethod
     def read_label_map():

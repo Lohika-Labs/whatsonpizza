@@ -8,7 +8,7 @@ from PIL import Image
 
 from .common import TAXONOMY_FILE, PROJECT_BASE
 
-MODEL = PROJECT_BASE + 'snapshots/resnet-50'
+MODEL = PROJECT_BASE + 'models/mxnet/resnet-50'
 
 
 Batch = namedtuple('Batch', ['data'])
