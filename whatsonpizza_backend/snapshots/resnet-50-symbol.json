@@ -3824,20 +3824,20 @@
     }, 
     {
       "op": "null", 
-      "name": "fc_weight", 
-      "attrs": {"num_hidden": "24"}, 
+      "name": "fc1_weight", 
+      "attrs": {"num_hidden": "10"}, 
       "inputs": []
     }, 
     {
       "op": "null", 
-      "name": "fc_bias", 
-      "attrs": {"num_hidden": "24"}, 
+      "name": "fc1_bias", 
+      "attrs": {"num_hidden": "10"}, 
       "inputs": []
     }, 
     {
       "op": "FullyConnected", 
-      "name": "fc", 
-      "attrs": {"num_hidden": "24"}, 
+      "name": "fc1", 
+      "attrs": {"num_hidden": "10"}, 
       "inputs": [[430, 0, 0], [431, 0, 0], [432, 0, 0]]
     }, 
     {
