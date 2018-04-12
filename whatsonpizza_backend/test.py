@@ -3,7 +3,6 @@
 import os
 from glob import glob
 from backend import Backend
-from backend.common import DATASET_BASE
 
 b = Backend()
 images = glob("./testset/*.jpg")
