@@ -35,7 +35,7 @@ def index_page():
 @app.route('/p', methods=['POST'])
 def p_page():
     data = {"status": "ok", "status_message": ""}
-    tmp = mkstemp()[1]
+    tmp = mkstemp(suffix=".jpg")[1]
     with open(tmp, 'wb') as fh:
         content = b64decode(request.data)
         fh.write(content)
@@ -50,4 +50,4 @@ def p_page():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=False)
