@@ -11,7 +11,11 @@ from keras.preprocessing import image
 
 import numpy as np
 
-from .common import TAXONOMY_FILE, PROJECT_BASE
+from .common import PROJECT_BASE
+
+MODEL_DIR = os.path.join(PROJECT_BASE, 'models', 'tensorflow')
+MODEL = os.path.join(MODEL_DIR, 'inception_v3.h5')
+MODEL_LABELS = os.path.join(MODEL_DIR, 'label_map.json')
 
 class TFClassifier(object):
     def __init__(self, model_path, labels_map):
@@ -34,13 +38,20 @@ class TFClassifier(object):
 
 class TFBackend(object):
     def __init__(self):
-        model = os.path.join(PROJECT_BASE, 'playground', 'classifier', 'keras', 'inception_v3.h5')
-        self.classifier = TFClassifier(model, self.read_label_map())
+        self.classifier = TFClassifier(MODEL, self.read_label_map())
 
     @staticmethod
     def read_label_map():
+        cats = []
+        taxonomy = json.loads(open(MODEL_LABELS, 'r').read())
+        #for _, v in collections.OrderedDict(taxonomy):
+        #    cats.append(v)
+        return taxonomy
+
+    @staticmethod
+    def read_label_map_old():
         label_map = {}
-        taxonomy = json.loads(open(TAXONOMY_FILE, 'r').read())
+        taxonomy = json.loads(open(MODEL_LABELS, 'r').read())
         i = 0
         for ptype in taxonomy.get('pizza_types'):
             label_map[str(i)] = ptype.get('name')

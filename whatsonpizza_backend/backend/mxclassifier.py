@@ -1,20 +1,22 @@
+import os
 import mxnet as mx
 import cv2
 import numpy as np
 import json
 # define a simple data batch
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 from PIL import Image
 
-from .common import TAXONOMY_FILE, PROJECT_BASE
+from .common import PROJECT_BASE
 
-MODEL = PROJECT_BASE + 'snapshots/resnet-50'
+MODEL_DIR = os.path.join(PROJECT_BASE, 'models', 'mxnet')
+MODEL = os.path.join(MODEL_DIR, 'resnet-50')
+MODEL_LABELS = os.path.join(MODEL_DIR, 'label_map.json')
 
 
 Batch = namedtuple('Batch', ['data'])
 Image.Image.tostring = Image.Image.tobytes
 
-#MODEL = 'resnet-50'
 ctx = mx.cpu()
 
 sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 50)
@@ -26,14 +28,13 @@ mod.set_params(arg_params, aux_params, allow_missing=True)
 
 def get_cats():
     cats = []
-    taxonomy = json.loads(open(TAXONOMY_FILE, 'r').read())
-    for ptype in taxonomy.get('pizza_types'):
-        cats.append(ptype.get('name'))
+    taxonomy = json.loads(open(MODEL_LABELS, 'r').read())
+    for _, v in OrderedDict(taxonomy).items():
+        cats.append(v)
     return cats
 
 
 def get_image(fname):
-    #fname = mx.test_utils.download(url)
     img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)
     if img is None:
         return None
@@ -51,13 +52,9 @@ def predict(fname):
     prob = np.squeeze(prob)
     acc = np.argsort(prob)[::-1]
     cat = get_cats()
+    print (cat)
     ALL = []
     for i in range(9):
         tup = (cat[i], prob[i])
         ALL.append(tup)
-    #print (ALL)
     return ALL
-    #print ALL
-
-
-#predict('http://images.pizza33.ua/products/product/POCpLYdcgVA34bcde4pK8JEjSWITKbtk.jpg')
