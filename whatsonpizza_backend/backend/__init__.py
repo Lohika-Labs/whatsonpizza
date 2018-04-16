@@ -1,1 +1,2 @@
-from .backend import Backend
+#-*- coding: utf-8 -*-
+""" Initialization package """

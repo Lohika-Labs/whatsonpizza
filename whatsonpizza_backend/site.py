@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+#-*- coding: utf-8 -*-
+""" Flask application """
 
 import json
 import os
-import time
 
 from base64 import b64decode
 from tempfile import mkstemp
@@ -10,42 +11,44 @@ from tempfile import mkstemp
 from flask import (Flask,
                    make_response,
                    redirect,
-                   render_template,
                    request
                   )
 
-from backend import Backend
+from backend.backend import Backend
 
-app = Flask(__name__)
-backend = Backend()
+app = Flask(__name__)  # pylint:disable=invalid-name
+backend = Backend()  # pylint:disable=invalid-name
 
 
 @app.route('/favicon.ico')
 def favicon_page():
+    """ Return favicon """
     return redirect('/static/img/favicon.ico')
 
 @app.route('/')
 @app.route('/index.htm')
 @app.route('/index.html')
 def index_page():
+    """ Empty index page """
     return 'Nothing here'
 
 
 @app.route('/p/', methods=['POST'])
 @app.route('/p', methods=['POST'])
 def p_page():
+    """ API endpoint """
     data = {"status": "ok", "status_message": ""}
     tmp = mkstemp(suffix=".jpg")[1]
-    with open(tmp, 'wb') as fh:
+    with open(tmp, 'wb') as file_handle:
         content = b64decode(request.data)
-        fh.write(content)
-        fh.close()
+        file_handle.write(content)
+        file_handle.close()
     data['mxnet'] = backend.mxnet_analyze_image(tmp)
     data['tensorflow'] = backend.tensorflow_analyze_image(tmp)
     os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
-    print (data)
+    print(data)
     return response
 
 

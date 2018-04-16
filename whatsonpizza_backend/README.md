@@ -4,20 +4,23 @@ Pizza images backend
 
 ## Running using Docker
 
-`./run_docker.sh`
+`make docker`
 
 Wait few minutes to boot up (MacBook Pro (i7, Early 2015) - about 7 minutes)
 then go to http://localhost:5000 - you're all set.
 
-## Installation
+## Development
+
+WARNING: Python 3.5+
+
+### Installing dependencies
 
 `make deps`
 
-## Running
+### Running
 
-`./run.sh`
+`make run`
 
-
-## Development
+### Debugging (single flask worker)
 
 `./site.py`

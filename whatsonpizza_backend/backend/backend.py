@@ -1,25 +1,33 @@
+#-*- coding: utf-8 -*-
+""" Backend main file """
 from __future__ import absolute_import
 
 from .mxclassifier import predict
 from .tfclassifier import TFBackend
 
+from .logger import  logger
+
 
 class Backend(object):
+    """ Recognition backend """
     def __init__(self):
-        self.tf = None
+        self.tensorflow = None
 
-    def mxnet_analyze_image(self, image_path):
+    @staticmethod
+    def mxnet_analyze_image(image_path):
+        """ Analyze image using MXNet"""
         results = []
-        print ('Analyzing using MXNet ', image_path)
+        logger.warning('Analyzing `%s` using MXNet', image_path)
         for ptype, score in predict(image_path):
             results.append({'name': ptype, 'value': str(round(score, 2))})
         return results
 
     def tensorflow_analyze_image(self, image_path):
-        if not self.tf:
-            self.tf = TFBackend()
+        """ Analyze image using TensorFlow """
+        if not self.tensorflow:
+            self.tensorflow = TFBackend()
         results = []
-        print ('Analyzing using TensorFlow ', image_path)
-        for a, b in self.tf.tensorflow_predict_image(image_path):
-            results.append({'name': a, 'value': str(round(float(b), 2))})
+        logger.warning('Analyzing `%s` using TensorFlow', image_path)
+        for name, probability in self.tensorflow.tensorflow_predict_image(image_path):
+            results.append({'name': name, 'value': str(round(float(probability), 2))})
         return results

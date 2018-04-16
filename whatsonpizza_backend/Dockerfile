@@ -9,8 +9,9 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Packages
 RUN apt-get update
-RUN apt-get install -y python3-pip python-dev python3-dev libgtk2.0-dev libhdf5-dev telnet
-RUN pip3 install --upgrade pip
+RUN apt-get upgrade -y
+RUN apt-get install -y python3-dev python3-pip libgtk2.0-dev libhdf5-dev telnet
+RUN pip3 install -U pip
 
 # Ports
 EXPOSE 5000
