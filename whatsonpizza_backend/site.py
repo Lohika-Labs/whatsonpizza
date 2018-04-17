@@ -15,10 +15,11 @@ from flask import (Flask,
                   )
 
 from backend.backend import Backend
+from backend.detection import PizzaDetectorWrapper
 
 app = Flask(__name__)  # pylint:disable=invalid-name
 backend = Backend()  # pylint:disable=invalid-name
-
+pizza_detector = PizzaDetectorWrapper()
 
 @app.route('/favicon.ico')
 def favicon_page():
@@ -43,8 +44,11 @@ def p_page():
         content = b64decode(request.data)
         file_handle.write(content)
         file_handle.close()
-    data['mxnet'] = backend.mxnet_analyze_image(tmp)
-    data['tensorflow'] = backend.tensorflow_analyze_image(tmp)
+    if not pizza_detector.detect_pizza(tmp):
+        data = {"status": "error", "status_message": "Not a pizza"}
+    else:
+        data['mxnet'] = backend.mxnet_analyze_image(tmp)
+        data['tensorflow'] = backend.tensorflow_analyze_image(tmp)
     os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
