@@ -9,7 +9,7 @@ from keras.applications import InceptionV3, imagenet_utils
 from keras.preprocessing import image
 
 from .common import PROJECT_BASE
-from .logger import logger
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -24,7 +24,7 @@ class PizzaDetector(object):  # pylint:disable=too-few-public-methods
     """ Pizza object detection using Keras/Tensorflow """
     def __init__(self, model_path=None, class_index=None):
         if class_index and os.path.exists(class_index) and os.path.isfile(class_index):
-            imagenet_utils.CLASS_INDEX=json.loads(open(class_index, 'r').read())
+            imagenet_utils.CLASS_INDEX = json.loads(open(class_index, 'r').read())
         self.model = InceptionV3(weights=model_path)
 
     def is_pizza(self, image_bytes):

@@ -2,9 +2,8 @@
 """ Backend main file """
 from __future__ import absolute_import
 
-from .mxclassifier import predict
+from .mxclassifier import MXNetBackend
 from .tfclassifier import TFBackend
-
 from .logger import  logger
 
 
@@ -18,7 +17,8 @@ class Backend(object):
         """ Analyze image using MXNet"""
         results = []
         logger.warning('Analyzing `%s` using MXNet', image_path)
-        for ptype, score in predict(image_path):
+        backend = MXNetBackend()
+        for ptype, score in backend.mxnet_predict_image(image_path):
             results.append({'name': ptype, 'value': str(round(score, 2))})
         return results
 

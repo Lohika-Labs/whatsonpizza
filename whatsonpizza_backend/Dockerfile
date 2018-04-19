@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Packages
 RUN apt-get update
 RUN apt-get upgrade -y
+RUN apt-get install -y apt-utils
 RUN apt-get install -y python3-dev python3-pip libgtk2.0-dev libhdf5-dev telnet
 RUN pip3 install -U pip
 

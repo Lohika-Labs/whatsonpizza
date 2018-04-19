@@ -7,5 +7,5 @@ eventlet
 mxnet==1.1.0
 opencv-python
 keras
-tensorflow==1.6.0
+tensorflow==1.7.0
 h5py
