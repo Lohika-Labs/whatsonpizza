@@ -18,8 +18,11 @@ class Backend(object):
         results = []
         logger.warning('Analyzing `%s` using MXNet', image_path)
         backend = MXNetBackend()
-        for ptype, score in backend.mxnet_predict_image(image_path):
-            results.append({'name': ptype, 'value': str(round(score, 2))})
+        for name, probability in backend.mxnet_predict_image(image_path):
+            probability = round(probability, 2)
+            if probability == 0:
+                continue
+            results.append({'name': name, 'value': str(probability)})
         return results
 
     def tensorflow_analyze_image(self, image_path):
@@ -29,5 +32,8 @@ class Backend(object):
         results = []
         logger.warning('Analyzing `%s` using TensorFlow', image_path)
         for name, probability in self.tensorflow.tensorflow_predict_image(image_path):
-            results.append({'name': name, 'value': str(round(float(probability), 2))})
+            probability = round(float(probability), 2)
+            if probability == 0:
+                continue
+            results.append({'name': name, 'value': str(probability)})
         return results
