@@ -48,7 +48,7 @@ def get_model(prefix, epoch):
     download(prefix + '-%04d.params' % (epoch,))
 
 
-def get_finetune(symbol, arg_params, num_classes, layer_name="Flatten"):
+def get_finetune(symbol, arg_params, num_classes, layer_name="flatten_output"):
     all_layers = symbol.get_internals()
     net = all_layers[layer_name]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
@@ -78,7 +78,6 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
 
 #get_model('http://data.dmlc.ml/mxnet/models/imagenet/inception-bn/', 0)
 sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 0)
-
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = get_finetune(sym, arg_params, num_classes)
 mod_score = fit(new_sym, new_args, aux_params, train, val, batch_size, num_gpus)
