@@ -48,7 +48,7 @@ def get_model(prefix, epoch):
     download(prefix + '-%04d.params' % (epoch,))
 
 
-def get_finetune(symbol, arg_params, num_classes, layer_name="flatten"):
+def get_finetune(symbol, arg_params, num_classes, layer_name="Flatten"):
     all_layers = symbol.get_internals()
     net = all_layers[layer_name]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
