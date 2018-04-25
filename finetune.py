@@ -11,8 +11,8 @@ else:
     from urllib import urlretrieve
 
 num_classes = 10
-batch_per_gpu = 128
-num_gpus = 1
+batch_per_gpu = 64
+num_gpus = 2
 batch_size = batch_per_gpu * num_gpus
 
 
@@ -24,7 +24,7 @@ def download(url):
 
 def get_iterators(batch_size, data_shape=(3, 224, 224)):
     train = mx.io.ImageRecordIter(
-        path_imgrec='./categorized-train.rec',
+        path_imgrec='./data-train.rec',
         data_name='data',
         label_name='softmax_label',
         batch_size=batch_size,
@@ -33,7 +33,7 @@ def get_iterators(batch_size, data_shape=(3, 224, 224)):
         rand_crop=True,
         rand_mirro=True)
     val = mx.io.ImageRecordIter(
-        path_imgrec='./categorized-val_train.rec',
+        path_imgrec='./data-val.rec',
         data_name='data',
         label_name='softmax_label',
         batch_size=batch_size,
@@ -59,14 +59,14 @@ def get_finetune(symbol, arg_params, num_classes, layer_name="flatten0"):
 
 def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=symbol, context=mx.gpu(0))
+    mod = mx.mod.Module(symbol=symbol, context=devs)
     mod.fit(train, val,
             num_epoch=50,
             arg_params=arg_params,
             aux_params=aux_params,
             allow_missing=True,
             batch_end_callback=mx.callback.Speedometer(batch_size, 1),
-            epoch_end_callback=mx.callback.do_checkpoint("resnet-50", 1),
+            epoch_end_callback=mx.callback.do_checkpoint("inception", 25),
             kvstore='device',
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01},
@@ -76,8 +76,8 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     return mod.score(val, metric)
 
 
-get_model('http://data.mxnet.io/models/imagenet/resnet/50-layers/resnet-50', 0)
-sym, arg_params, aux_params = mx.model.load_checkpoint('resnet-50', 0)
+#get_model('http://data.dmlc.ml/mxnet/models/imagenet/inception-bn/', 0)
+sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 0)
 
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = get_finetune(sym, arg_params, num_classes)
