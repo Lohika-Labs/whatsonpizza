@@ -48,9 +48,9 @@ def get_model(prefix, epoch):
     download(prefix + '-%04d.params' % (epoch,))
 
 
-def get_finetune(symbol, arg_params, num_classes, layer_name="drop7"):
+def get_finetune(symbol, arg_params, num_classes, layer_name="flatten"):
     all_layers = symbol.get_internals()
-    net = all_layers[layer_name + '_output']
+    net = all_layers[layer_name]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
     net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
