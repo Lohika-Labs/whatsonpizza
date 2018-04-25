@@ -50,7 +50,7 @@ def get_model(prefix, epoch):
 
 def get_finetune(symbol, arg_params, num_classes, layer_name="flatten_0"):
     all_layers = symbol.get_internals()
-    net = all_layers[layer_name + '_output']
+    net = all_layers[layer_name]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
     net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
