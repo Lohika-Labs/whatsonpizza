@@ -5,38 +5,53 @@ import numpy as np
 from collections import namedtuple
 from PIL import Image
 
-Batch = namedtuple('Batch', ['data'])
 Image.Image.tostring = Image.Image.tobytes
 
-MODEL = 'whatsonpizza_backend/snapshots/model/resnet-152'
-ctx = mx.cpu()
 
-sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 0)
-mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
-mod.bind(for_training=False, data_shapes=[('data', (1, 3, 50, 50))],
-         label_shapes=mod._label_shapes)
-mod.set_params(arg_params, aux_params, allow_missing=True)
+def loadInceptionv3():
+    sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 0)
+    mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
+    mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))])
+    mod.set_params(arg_params, aux_params, allow_missing=True)
+    return mod
 
 
-def get_image(url):
-    fname = mx.test_utils.download(url)
-    img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)
-    if img is None:
-        return None
-    img = cv2.resize(img, (224, 224))
+def loadCategories():
+    synsetfile = open('synset.txt', 'r')
+    synsets = []
+    for l in synsetfile:
+        synsets.append(l.rstrip())
+    return synsets
+
+
+def prepareNDArray(filename):
+    img = cv2.imread(filename)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (224, 224,))
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
-    return img
+    return mx.nd.array(img)
 
 
-def predict(url):
-    img = get_image(url)
-    mod.forward(Batch([mx.nd.array(img)]))
-    prob = mod.get_outputs()[0].asnumpy()
+def predict(filename, model, categories, n):
+    array = prepareNDArray(filename)
+    Batch = namedtuple('Batch', ['data'])
+    model.forward(Batch([array]))
+    prob = model.get_outputs()[0].asnumpy()
     prob = np.squeeze(prob)
-    a = np.argsort(prob)[::-1]
-    print('probability=%f' % (prob[a[0]]))
+    sortedprobindex = np.argsort(prob)[::-1]
+    topn = []
+    for i in sortedprobindex[0:n]:
+        topn.append((prob[i], categories[i]))
+    return topn
 
 
-predict('http://images.pizza33.ua/products/product/POCpLYdcgVA34bcde4pK8JEjSWITKbtk.jpg')
+def detect(filename):
+    model = loadInceptionv3()
+    cats = loadCategories()
+    topn = predict(filename, model, cats, 5)
+    return 'pizza' not in topn
+
+det = detect('data/orig/Hawaii/2071.jpg')
+print det
