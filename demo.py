@@ -7,9 +7,10 @@ from PIL import Image
 
 Image.Image.tostring = Image.Image.tobytes
 
+MODEL = 'Inception-BN'
 
 def loadInceptionv3():
-    sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 0)
+    sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 0)
     mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
     mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))])
     mod.set_params(arg_params, aux_params, allow_missing=True)
