@@ -16,7 +16,7 @@ from .logger import logger
 
 
 MODEL_DIR = os.path.join(PROJECT_BASE, 'models', 'mxnet')
-MODEL = os.path.join(MODEL_DIR, 'resnet-50')
+MODEL = os.path.join(MODEL_DIR, 'inception-50')
 MODEL_LABELS = os.path.join(MODEL_DIR, 'label_map.json')
 
 
