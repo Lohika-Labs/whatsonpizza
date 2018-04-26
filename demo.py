@@ -8,6 +8,7 @@ from PIL import Image
 Image.Image.tostring = Image.Image.tobytes
 
 MODEL = 'Inception-BN'
+SYNSET = 'synset.txt'
 
 def loadInceptionv3():
     sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 0)
@@ -18,7 +19,7 @@ def loadInceptionv3():
 
 
 def loadCategories():
-    synsetfile = open('synset.txt', 'r')
+    synsetfile = open(SYNSET, 'r')
     synsets = []
     for l in synsetfile:
         synsets.append(l.rstrip())
