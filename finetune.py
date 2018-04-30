@@ -48,7 +48,7 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
             aux_params=aux_params,
             allow_missing=True,
             batch_end_callback=mx.callback.Speedometer(batch_size, 1),
-            epoch_end_callback=mx.callback.do_checkpoint("Inception", 25),
+            epoch_end_callback=mx.callback.do_checkpoint("Inception", 50),
             kvstore='device',
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01},
