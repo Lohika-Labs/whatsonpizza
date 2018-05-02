@@ -13,9 +13,9 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 num_classes = 10
 
 img_width, img_height = 299, 299
-train_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/cleaned/train"
-validation_data_dir = "/mnt/data/lab/datasets/pizza/pizza labeled/cleaned/test"
-nb_train_samples = 6104*4
+train_data_dir = "/home/vbartko/projects/wop_data/train"
+validation_data_dir = "/home/vbartko/projects/wop_data/test"
+nb_train_samples = 1526
 nb_validation_samples = 382
 batch_size = 64
 epochs = 150
@@ -41,9 +41,9 @@ opt = optimizers.SGD(lr=.01, momentum=.9)
 
 
 def schedule(epoch):
-    if epoch < 10:
-        return 0.01
     if epoch < 20:
+        return 0.01
+    if epoch < 35:
         return 0.001
     elif epoch < 50:
         return .0005
