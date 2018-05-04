@@ -8,6 +8,9 @@ from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
 
+from keras_sequential_ascii import keras2ascii
+
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 num_classes = 10
@@ -17,8 +20,8 @@ train_data_dir = "/home/vbartko/projects/wop_data/train"
 validation_data_dir = "/home/vbartko/projects/wop_data/test"
 nb_train_samples = 1526
 nb_validation_samples = 382
-batch_size = 64
-epochs = 150
+batch_size = 16
+epochs = 500
 
 base_model = InceptionV3(weights='imagenet', include_top=False, input_shape = (img_width, img_height, 3))
 
@@ -29,13 +32,17 @@ for layer in base_model.layers:
 x = base_model.output
 
 x = Dense(128, activation='relu',  init='glorot_uniform', W_regularizer=l2(.0005))(x)
-x = Dropout(0.8)(x)
+x = Dropout(0.6)(x)
 
 x = AveragePooling2D(pool_size=(8, 8))(x)
-x = Dropout(.7)(x)
+x = Dropout(.6)(x)
 x = Flatten()(x)
 predictions = Dense(num_classes, init='glorot_uniform', W_regularizer=l2(.0005), activation='softmax')(x)
 model = Model(inputs=base_model.input, outputs=predictions)
+
+
+print(keras2ascii(model))
+
 
 opt = optimizers.SGD(lr=.01, momentum=.9)
 
@@ -45,7 +52,7 @@ def schedule(epoch):
         return 0.01
     if epoch < 35:
         return 0.001
-    elif epoch < 50:
+    elif epoch < 1000:
         return .0005
 
 lr_scheduler = LearningRateScheduler(schedule)
