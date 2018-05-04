@@ -37,10 +37,10 @@ def retrain(train_data_dir, validation_data_dir):
     x = base_model.output
 
     x = Dense(128, activation='relu', init='glorot_uniform', W_regularizer=l2(.0005))(x)
-    x = Dropout(0.6)(x)
+    x = Dropout(0.7)(x)
 
     x = AveragePooling2D(pool_size=(8, 8))(x)
-    x = Dropout(.6)(x)
+    x = Dropout(.7)(x)
     x = Flatten()(x)
     predictions = Dense(num_classes, init='glorot_uniform', W_regularizer=l2(.0005), activation='softmax')(x)
 
