@@ -30,7 +30,7 @@ def get_iterators(batch_size, data_shape=(3, 256, 256)):
     return train, val
 
 
-def do_finetune(symbol, arg_params, num_classes):
+def do_finetune(symbol, arg_params):
     all_layers = symbol.get_internals()
     net = all_layers["flatten_output"]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
@@ -39,7 +39,7 @@ def do_finetune(symbol, arg_params, num_classes):
     return net, new_args
 
 
-def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
+def fit(symbol, arg_params, aux_params, train, val):
     devs = [mx.gpu(i) for i in range(num_gpus)]
     mod = mx.mod.Module(symbol=symbol, context=devs)
     mod.fit(train, val,
@@ -58,8 +58,8 @@ def fit(symbol, arg_params, aux_params, train, val, batch_size, num_gpus):
     return mod.score(val, metric)
 
 
-sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 0)
+sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 126)
 (train, val) = get_iterators(batch_size)
-(new_sym, new_args) = do_finetune(sym, arg_params, num_classes)
-mod_score = fit(new_sym, new_args, aux_params, train, val, batch_size, num_gpus)
+(new_sym, new_args) = do_finetune(sym, arg_params)
+mod_score = fit(new_sym, new_args, aux_params, train, val)
 print (mod_score)
