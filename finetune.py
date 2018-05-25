@@ -58,7 +58,7 @@ def fit(symbol, arg_params, aux_params, train, val):
     return mod.score(val, metric)
 
 
-sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 126)
+sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 00)
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = do_finetune(sym, arg_params)
 mod_score = fit(new_sym, new_args, aux_params, train, val)
