@@ -34,7 +34,7 @@ def do_finetune(symbol, arg_params):
     all_layers = symbol.get_internals()
     net = all_layers["flatten_output"]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
-    net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
+    net = mx.symbol.SoftmaxOutput(data=net, name='softmax_label_label')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
     return net, new_args
 
