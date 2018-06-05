@@ -9,7 +9,7 @@ num_gpus = 2
 batch_size = batch_per_gpu * num_gpus
 
 
-def get_iterators(batch_size, data_shape=(3, 256, 256)):
+def get_iterators(batch_size, data_shape=(3, 224, 224)):
     train = mx.io.ImageRecordIter(
         path_imgrec='./data-train.rec',
         data_name='data',
@@ -34,7 +34,7 @@ def do_finetune(symbol, arg_params):
     all_layers = symbol.get_internals()
     net = all_layers["flatten_output"]
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
-    net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
+    net = mx.symbol.SoftmaxOutput(data=net, name='softmax_label')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
     return net, new_args
 
@@ -54,7 +54,7 @@ def fit(symbol, arg_params, aux_params, train, val):
             optimizer_params={'learning_rate': 0.01},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric='acc')
-    metric = mx.metric.Accuracy()
+    metric = mx.metric.F1()
     return mod.score(val, metric)
 
 
