@@ -26,7 +26,7 @@ class MXNetBackend(object):
         self.batch = namedtuple('Batch', ['data'])
         sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 50)
         self.mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
-        self.mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))],
+        self.mod.bind(for_training=False, data_shapes=[('data', (1, 3, 299, 299))],
                       label_shapes=self.mod._label_shapes)  # pylint:disable=protected-access
         self.mod.set_params(arg_params, aux_params, allow_missing=True)
 
@@ -45,7 +45,7 @@ class MXNetBackend(object):
         img = cv2.cvtColor(cv2.imread(fname), cv2.COLOR_BGR2RGB)  # pylint:disable=no-member
         if img is None:
             return None
-        img = cv2.resize(img, (224, 224))  # pylint:disable=no-member
+        img = cv2.resize(img, (299, 299))  # pylint:disable=no-member
         img = np.swapaxes(img, 0, 2)
         img = np.swapaxes(img, 1, 2)
         img = img[np.newaxis, :]
