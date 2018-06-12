@@ -7,13 +7,13 @@ from PIL import Image
 
 Image.Image.tostring = Image.Image.tobytes
 
-MODEL = 'Inception-BN'
+MODEL = 'Inception'
 SYNSET = 'synset.txt'
 
 def loadInceptionv3():
-    sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 0)
+    sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 50)
     mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
-    mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))])
+    mod.bind(for_training=False, data_shapes=[('data', (1, 3, 299, 299))])
     mod.set_params(arg_params, aux_params, allow_missing=True)
     return mod
 
@@ -29,7 +29,7 @@ def loadCategories():
 def prepareNDArray(filename):
     img = cv2.imread(filename)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img, (224, 224,))
+    img = cv2.resize(img, (299, 299,))
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
@@ -53,7 +53,7 @@ def detect(filename):
     model = loadInceptionv3()
     cats = loadCategories()
     topn = predict(filename, model, cats, 5)
-    return 'pizza' not in topn
+    return topn
 
-det = detect('data/orig/Hawaii/2071.jpg')
+det = detect('data/orig/Bolognese/57.jpg')
 print det
