@@ -45,7 +45,7 @@ def predict(filename, model, categories, n):
     sortedprobindex = np.argsort(prob)[::-1]
     topn = []
     for i in sortedprobindex[0:n]:
-        topn.append((prob[i], categories[i]))
+        topn.append(('{:f}'.format(prob[i]), categories[i]))
     return topn
 
 

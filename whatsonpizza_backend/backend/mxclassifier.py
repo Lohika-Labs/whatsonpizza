@@ -56,11 +56,11 @@ class MXNetBackend(object):
         img = self.get_image(fname)
         self.mod.forward(self.batch([mx.nd.array(img)]))
         prob = self.mod.get_outputs()[0].asnumpy()
-        prob = np.squeeze(prob)
+        prob = np.squeeze(prob)[::-1]
         cat = self.get_cats()
         logger.warning('MXNet categories: %s', cat)
         results = []
         for idx in range(9):
-            tup = (cat[idx], prob[idx])
+            tup = (cat[idx], '{:f}'.format(prob[idx]))
             results.append(tup)
         return results
