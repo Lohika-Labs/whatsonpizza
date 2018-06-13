@@ -55,5 +55,5 @@ def detect(filename):
     topn = predict(filename, model, cats, 5)
     return topn
 
-det = detect('data/orig/Bolognese/57.jpg')
+det = detect('data/orig/Bolognese/18587.jpg')
 print det
