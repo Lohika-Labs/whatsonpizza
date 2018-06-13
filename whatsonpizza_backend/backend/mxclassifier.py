@@ -61,6 +61,6 @@ class MXNetBackend(object):
         logger.warning('MXNet categories: %s', cat)
         results = []
         for idx in range(9):
-            tup = (cat[idx], '{:f}'.format(prob[idx]))
+            tup = (cat[idx], prob[idx])
             results.append(tup)
         return results
