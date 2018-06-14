@@ -18,6 +18,7 @@ from .logger import logger
 MODEL_DIR = os.path.join(PROJECT_BASE, 'models', 'mxnet')
 MODEL = os.path.join(MODEL_DIR, 'inception-50')
 MODEL_LABELS = os.path.join(MODEL_DIR, 'label_map.json')
+MODEL_SYNSET = os.path.join(MODEL_DIR, 'synset.txt')
 
 
 class MXNetBackend(object):
@@ -34,9 +35,11 @@ class MXNetBackend(object):
     def get_cats():
         """ Return list of categories """
         categories = []
-        taxonomy = json.loads(open(MODEL_LABELS, 'r').read())
-        for _, category in OrderedDict(taxonomy).items():
-            categories.append(category)
+        taxonomy = open(MODEL_SYNSET, 'r')
+        #for _, category in OrderedDict(taxonomy).items():
+         #   categories.append(category)
+        for l in taxonomy:
+            categories.append(l.rstrip())
         return categories
 
     @staticmethod
@@ -56,11 +59,12 @@ class MXNetBackend(object):
         img = self.get_image(fname)
         self.mod.forward(self.batch([mx.nd.array(img)]))
         prob = self.mod.get_outputs()[0].asnumpy()
-        prob = np.squeeze(prob)[::-1]
+        prob = np.squeeze(prob)
+        sorted = np.argsort(prob)[::-1]
         cat = self.get_cats()
         logger.warning('MXNet categories: %s', cat)
         results = []
-        for idx in range(9):
+        for idx in sorted[0:5]:
             tup = (cat[idx], prob[idx])
             results.append(tup)
         return results
