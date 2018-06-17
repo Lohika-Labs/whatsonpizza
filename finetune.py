@@ -33,8 +33,8 @@ def get_iterators(batch_size, data_shape=(3, 299, 299)):
 def do_finetune(symbol, arg_params):
     all_layers = symbol.get_internals()
     net = all_layers["flatten_output"]
-    net = mx.symbol.LeakyReLU(data=net, act_type="elu", slope=0.25)
     net = mx.symbol.Dropout(data=net, p=0.7, name='dp', mode='always')
+    net = mx.sym.Activation(data=net, name='relu1', act_type="relu")
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
     net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
@@ -53,7 +53,7 @@ def fit(symbol, arg_params, aux_params, train, val):
             epoch_end_callback=mx.callback.do_checkpoint("Inception", 50),
             kvstore='device',
             optimizer='sgd',
-            optimizer_params={'learning_rate': 0.01, 'wd': 0.0005},
+            optimizer_params={'learning_rate': 0.01, 'wd': 0.0005, 'momentum': 0.9},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric='ce')
     metric = mx.metric.create('ce')
