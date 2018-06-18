@@ -11,7 +11,7 @@ MODEL = 'Inception'
 SYNSET = 'synset.txt'
 
 def loadInceptionv3():
-    sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 50)
+    sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 100)
     mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
     mod.bind(for_training=False, data_shapes=[('data', (1, 3, 299, 299))])
     mod.set_params(arg_params, aux_params, allow_missing=True)

@@ -16,7 +16,7 @@ from .logger import logger
 
 
 MODEL_DIR = os.path.join(PROJECT_BASE, 'models', 'mxnet')
-MODEL = os.path.join(MODEL_DIR, 'inception-50')
+MODEL = os.path.join(MODEL_DIR, 'Inception-100')
 MODEL_LABELS = os.path.join(MODEL_DIR, 'label_map.json')
 MODEL_SYNSET = os.path.join(MODEL_DIR, 'synset.txt')
 
@@ -25,7 +25,7 @@ class MXNetBackend(object):
     """ MXNet classifier """
     def __init__(self):
         self.batch = namedtuple('Batch', ['data'])
-        sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 50)
+        sym, arg_params, aux_params = mx.model.load_checkpoint(MODEL, 100)
         self.mod = mx.mod.Module(symbol=sym, context=mx.cpu(), label_names=None)
         self.mod.bind(for_training=False, data_shapes=[('data', (1, 3, 299, 299))],
                       label_shapes=self.mod._label_shapes)  # pylint:disable=protected-access
