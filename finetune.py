@@ -44,6 +44,11 @@ def do_finetune(symbol, arg_params):
 def fit(symbol, arg_params, aux_params, train, val):
     devs = [mx.gpu(i) for i in range(num_gpus)]
     mod = mx.mod.Module(symbol=symbol, context=devs)
+    metrics = mx.metric.CompositeEvalMetric()
+    ce = mx.metric.create('ce')
+    acc = mx.metric.create('acc')
+    metrics.add(ce)
+    metrics.add(acc)
     mod.fit(train, val,
             num_epoch=100,
             arg_params=arg_params,
@@ -55,9 +60,9 @@ def fit(symbol, arg_params, aux_params, train, val):
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01, 'wd': 0.0005, 'momentum': 0.9},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
-            eval_metric='ce')
-    metric = mx.metric.create('ce')
-    return mod.score(val, metric)
+            eval_metric=metrics,
+            validation_metric=metrics)
+    return mod.score(val, metrics)
 
 
 sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 00)
