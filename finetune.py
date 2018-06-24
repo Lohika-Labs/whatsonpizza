@@ -34,9 +34,8 @@ def get_iterators(batch_size, data_shape=(3, 299, 299)):
 def do_finetune(symbol, arg_params):
     all_layers = symbol.get_internals()
     net = all_layers["flatten_output"]
-    net = mx.sym.Activation(data=net, name='relu1', act_type="relu")
+    net = mx.symbol.Activation(data=net, name='relu1', act_type="relu")
     net = mx.symbol.Dropout(data=net, p=0.7, name='dp', mode='always')
-    net = mx.symbol.Pooling(data=net, pool_type='avg', kernel=(1, 1, 1))
     net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name='fc1')
     net = mx.symbol.SoftmaxOutput(data=net, name='softmax')
     new_args = dict({k: arg_params[k] for k in arg_params if 'fc1' not in k})
