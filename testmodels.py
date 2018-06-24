@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import mxnet as mx
 import logging
 
@@ -25,16 +26,6 @@ for epoch in range(1, 100):
              data_shapes=test.provide_data,
              label_shapes=test.provide_label)
     mod.set_params(arg_params, aux_params)
-    mod.score(eval_data=test, eval_metric=['acc', 'ce'],
-              batch_end_callback=log_test_metric(period=1))
-
-
-def log_test_metric(period):
-    def _callback(param):
-        if param.nbatch % period == 0 and param.eval_metric is not None:
-            name_value = param.eval_metric.get_name_value()
-            for name, value in name_value:
-                logging.info('Epoch[%d] Test-%s=%f',
-                             param.epoch, name, value)
-
-    return _callback
+    metric = mod.score(eval_data=test, eval_metric=['acc', 'ce'])
+    for name, value in metric:
+        logging.info("Epoch[%d] Test-%s=%f", epoch, name, value)
