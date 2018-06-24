@@ -18,7 +18,6 @@ test = mx.io.ImageRecordIter(
     rand_mirro=False)
 
 for epoch in range(1, 100):
-    sym, arg_params, aux_params = mx.model.load_checkpoint('Inception', epoch)
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=sym, context=devs)
+    mod = mx.mod.Module.load(prefix="Inception", epoch=epoch, context=devs)
     mod.score(eval_data=test, eval_metric=['ce', 'acc'])
