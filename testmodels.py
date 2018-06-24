@@ -20,4 +20,5 @@ test = mx.io.ImageRecordIter(
 for epoch in range(1, 100):
     devs = [mx.gpu(i) for i in range(num_gpus)]
     mod = mx.mod.Module.load(prefix="Inception", epoch=epoch, context=devs)
+    mod.bind(data_shapes=[('data', (3, 229, 229))])
     mod.score(eval_data=test, eval_metric=['ce', 'acc'])
