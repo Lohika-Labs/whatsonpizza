@@ -36,4 +36,5 @@ def log_test_metric(period):
             for name, value in name_value:
                 logging.info('Epoch[%d] Test-%s=%f',
                              param.epoch, name, value)
+
     return _callback
