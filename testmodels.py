@@ -20,10 +20,20 @@ test = mx.io.ImageRecordIter(
 for epoch in range(1, 100):
     devs = [mx.gpu(i) for i in range(num_gpus)]
     sym, arg_params, aux_params = mx.model.load_checkpoint("Inception", epoch)
-    mod = mx.mod.Module(symbol=sym, context=devs, label_names=['softmax_label', ])
+    mod = mx.mod.Module(symbol=sym, context=devs)
     mod.bind(for_training=False,
              data_shapes=test.provide_data,
              label_shapes=test.provide_label)
     mod.set_params(arg_params, aux_params)
     mod.score(eval_data=test, eval_metric=['acc', 'ce'],
-              batch_end_callback=mx.callback.log_train_metric(period=batch_size, auto_reset=True))
+              batch_end_callback=mx.callback.log_train_metric(period=1))
+
+
+def log_test_metric(period):
+    def _callback(param):
+        if param.nbatch % period == 0 and param.eval_metric is not None:
+            name_value = param.eval_metric.get_name_value()
+            for name, value in name_value:
+                logging.info('Epoch[%d] Test-%s=%f',
+                             param.epoch, name, value)
+    return _callback
