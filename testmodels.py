@@ -26,7 +26,7 @@ for epoch in range(1, 100):
              label_shapes=test.provide_label)
     mod.set_params(arg_params, aux_params)
     mod.score(eval_data=test, eval_metric=['acc', 'ce'],
-              batch_end_callback=mx.callback.log_train_metric(period=1))
+              batch_end_callback=log_test_metric(period=1))
 
 
 def log_test_metric(period):
