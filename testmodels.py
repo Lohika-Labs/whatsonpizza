@@ -19,6 +19,10 @@ test = mx.io.ImageRecordIter(
 
 for epoch in range(1, 100):
     devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module.load(prefix="Inception", epoch=epoch, context=devs)
-    mod.bind(data_shapes=[('data', (1, 3, 229, 229))])
-    mod.score(eval_data=test, eval_metric=['ce', 'acc'])
+    sym, arg_params, aux_params = mx.model.load_checkpoint("Inception", epoch)
+    mod = mx.mod.Module(symbol=sym, context=devs, label_names=['softmax_label', ])
+    mod.bind(for_training=False,
+             data_shapes=test.provide_data,
+             label_shapes=test.provide_label)
+    mod.set_params(arg_params, aux_params)
+    mod.score(eval_data=test, eval_metric=['acc', 'ec'])
