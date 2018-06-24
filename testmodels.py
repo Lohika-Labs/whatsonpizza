@@ -25,4 +25,4 @@ for epoch in range(1, 100):
              data_shapes=test.provide_data,
              label_shapes=test.provide_label)
     mod.set_params(arg_params, aux_params)
-    mod.score(eval_data=test, eval_metric=['acc', 'ec'])
+    mod.score(eval_data=test, eval_metric=['acc', 'ce'])
