@@ -1,5 +1,6 @@
 import mxnet as mx
 import logging
+
 head = '%(asctime)-15s %(message)s'
 logging.basicConfig(level=logging.DEBUG, format=head)
 
@@ -44,29 +45,23 @@ def do_finetune(symbol, arg_params):
 def fit(symbol, arg_params, aux_params, train, val):
     devs = [mx.gpu(i) for i in range(num_gpus)]
     mod = mx.mod.Module(symbol=symbol, context=devs)
-    metrics = mx.metric.CompositeEvalMetric()
-    ce = mx.metric.create('ce')
-    acc = mx.metric.create('acc')
-    metrics.add(ce)
-    metrics.add(acc)
+    metrics = mx.metric.create(['ce', 'acc'])
     mod.fit(train, val,
             num_epoch=100,
             arg_params=arg_params,
             aux_params=aux_params,
             allow_missing=True,
-            #batch_end_callback=mx.callback.Speedometer(batch_size, 1),
-            epoch_end_callback=mx.callback.do_checkpoint("Inception", 50),
+            # batch_end_callback=mx.callback.Speedometer(batch_size, 1),
+            epoch_end_callback=mx.callback.do_checkpoint("Inception", 1),
             kvstore='device',
             optimizer='sgd',
             optimizer_params={'learning_rate': 0.01, 'wd': 0.0005, 'momentum': 0.9},
             initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
             eval_metric=metrics,
             validation_metric=metrics)
-    return mod.score(val, metrics)
 
 
 sym, arg_params, aux_params = mx.model.load_checkpoint('Inception-BN', 00)
 (train, val) = get_iterators(batch_size)
 (new_sym, new_args) = do_finetune(sym, arg_params)
-mod_score = fit(new_sym, new_args, aux_params, train, val)
-print (mod_score)
+fit(new_sym, new_args, aux_params, train, val)
