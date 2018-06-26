@@ -21,6 +21,10 @@ proc_name = 'whatsonpizza_backend'
 pidfile = '/tmp/wb.pid'
 # Daemonize the Gunicorn process. Not for Supervisord.
 # daemon = True
+
+# Environment variables. Uncomment this line to turn on debugging.
+#raw_env = ["WOP_DEBUG=1"]
+
 # Logging
 #errorlog = "/tmp/wc_error.log"
 loglevel = 'debug'
