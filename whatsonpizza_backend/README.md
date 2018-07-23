@@ -13,6 +13,7 @@ then go to http://localhost:5000 - you're all set.
 
 WARNING: Python 3.5+
 
+
 ### Installing dependencies
 
 `make deps`
@@ -24,3 +25,8 @@ WARNING: Python 3.5+
 ### Debugging (single flask worker)
 
 `./site.py`
+
+
+### Debugging (gunicorn)
+
+Edit `etc/gunicorn.conf.py` and uncomment `raw_env` line.

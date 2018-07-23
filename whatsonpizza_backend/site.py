@@ -16,6 +16,8 @@ from flask import (Flask,
 
 from backend.backend import Backend
 
+DEBUG = os.environ.get('WOP_DEBUG', None) is not None
+
 app = Flask(__name__)  # pylint:disable=invalid-name
 backend = Backend()  # pylint:disable=invalid-name
 
@@ -42,7 +44,10 @@ def p_page():
         file_handle.write(content)
         file_handle.close()
     data = backend.analyze_image(tmp)
-    os.remove(tmp)
+    if DEBUG:
+        print('Saving analyzed image to `%s`' % tmp)
+    else:
+        os.remove(tmp)
     response = make_response(json.dumps(data))
     response.headers['Content-type'] = 'application/json'
     print(data)
