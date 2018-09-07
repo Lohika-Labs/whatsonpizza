@@ -2,13 +2,11 @@
 
 ## Task
 
-Build an ML model that would look at a picture of a pizza and output a list of possible ingredients on it.
+Build an ML model that would look at a picture of a pizza and output a list of possible pizza name.
 
 So far, the model doesn't perform well, most likely due to a low-quality dataset.
 
-This is a multilclass multilabel classification problem. We treat each ingredient as a class (or a category), and the output must contain several ingredients, not just one, which is why it's multilabel.
-
-We also trained a model for a single-label classification, where the output was just the name of the pizza.
+We trained a model for a single-label classification, where the output just the name of the pizza.
 
 The dataset and the snapshots of the trained model are not in the git repository because they are too large. To access these, connect to our server with the password `User123`:
 
