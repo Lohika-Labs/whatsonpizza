@@ -27,8 +27,8 @@ We used [Inception-BN model](https://github.com/dmlc/mxnet-model-gallery/blob/ma
 After training put output models at [models](https://github.com/Lohika-Labs/whatsonpizza/tree/master/whatsonpizza_backend/models) folder otherwise backend will not be able to work.
 
 ## Classification
-* [MxNet classifier] (https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
-* [TensorFlow classifier] (https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/tfclassifier.py)
+* [MxNet classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
+* [TensorFlow classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/tfclassifier.py)
 
 For testing MxNet model without backend deployment please use [testmodels.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/testmodels.py) or [demo.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/demo.py).
 
