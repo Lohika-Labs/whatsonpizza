@@ -3,7 +3,7 @@
 What's On Pizza - project that give you an ability to know pizza name by photo.
 This repo contains server side source code and similiar training/validation scripts using MxNet and TensorFlow.
 You can compare two frameworks that solve one task. 
-Client side can be found [here] (https://github.com/Lohika-Labs/whatsonpizza-mobile).
+Client side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobile).
 
 ## Task
 
