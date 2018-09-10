@@ -1,7 +1,7 @@
 # What's On Pizza Project
 
 What's On Pizza - project that give you an ability to know pizza name by photo.
-This repo contains server side source code and similiar training/validation scripts using MxNet and TensorFlow.
+This repo contains server side source code and similiar training/validation scripts using MXNet and TensorFlow.
 You can compare two frameworks that solve one task. 
 Client side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobile).
 
@@ -21,14 +21,14 @@ Trained models are used on the backend, which logic can be found [here](https://
 
 We used [Inception-BN model](https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-1k-inception-bn.md) as a pre-trained model and fine-tune as a technique for changing initial model wights using collected data.
 * [TensorFlow fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/tf_dev/inception_retrain.py)
-* [MxNet fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/finetune.py)
+* [MXNet fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/finetune.py)
 
 After training put output models at [models](https://github.com/Lohika-Labs/whatsonpizza/tree/master/whatsonpizza_backend/models) folder otherwise backend will not be able to work.
 
 ## Classification
-* [MxNet classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
+* [MXNet classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
 * [TensorFlow classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/tfclassifier.py)
 
-For testing MxNet model without backend deployment please use [testmodels.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/testmodels.py) or [demo.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/demo.py).
+For testing MXNet model without backend deployment please use [testmodels.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/testmodels.py) or [demo.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/demo.py).
 
 Please, write us for more details dmaiboroda@lohika.com
