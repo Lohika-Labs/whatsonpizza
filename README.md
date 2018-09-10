@@ -1,15 +1,15 @@
 # What's On Pizza Project
 
-What's On Pizza - project that give you an ability to know pizza name by photo.
-This repo contains server side source code and similiar training/validation scripts using MXNet and TensorFlow.
+What's On Pizza - project that gives you an ability to know pizza name by a photo.
+This repo contains server-side source code and similar training/validation scripts using MXNet and TensorFlow.
 You can compare two frameworks that solve one task. 
-Client side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobile).
+Client-side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobile).
 
 ## Task
 
 Build an ML model that would look at a picture of a pizza and output a list of possible pizza names.
 We trained a model for a single-label classification, where the output just the name of the pizza.
-Currently only ten pizza names
+Currently only ten pizza names.
 
 ## Dataset
 
@@ -23,7 +23,7 @@ We used [Inception-BN model](https://github.com/dmlc/mxnet-model-gallery/blob/ma
 * [TensorFlow fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/tf_dev/inception_retrain.py)
 * [MXNet fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/finetune.py)
 
-After training put output models at [models](https://github.com/Lohika-Labs/whatsonpizza/tree/master/whatsonpizza_backend/models) folder otherwise backend will not be able to work.
+After training put output models at [models](https://github.com/Lohika-Labs/whatsonpizza/tree/master/whatsonpizza_backend/models) folder otherwise, backend will not be able to work.
 
 ## Classification
 * [MXNet classifier](https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
