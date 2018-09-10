@@ -8,7 +8,6 @@ Client side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobi
 ## Task
 
 Build an ML model that would look at a picture of a pizza and output a list of possible pizza names.
-So far, the model doesn't perform well, most likely due to a low-quality dataset.
 We trained a model for a single-label classification, where the output just the name of the pizza.
 Currently only ten pizza names
 
