@@ -10,6 +10,7 @@ Client side can be found [here](https://github.com/Lohika-Labs/whatsonpizza-mobi
 Build an ML model that would look at a picture of a pizza and output a list of possible pizza names.
 So far, the model doesn't perform well, most likely due to a low-quality dataset.
 We trained a model for a single-label classification, where the output just the name of the pizza.
+Currently only ten pizza names
 
 ## Dataset
 
@@ -19,7 +20,16 @@ Trained models are used on the backend, which logic can be found [here](https://
 
 ## The code
 
-//TODO
+We used [Inception-BN model](https://github.com/dmlc/mxnet-model-gallery/blob/master/imagenet-1k-inception-bn.md) as a pre-trained model and fine-tune as a technique for changing initial model wights using collected data.
+* [TensorFlow fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/tf_dev/inception_retrain.py)
+* [MxNet fine-tunning](https://github.com/Lohika-Labs/whatsonpizza/blob/master/finetune.py)
 
-## Evaluation
-//TODO
+After training put output models at [models](https://github.com/Lohika-Labs/whatsonpizza/tree/master/whatsonpizza_backend/models) folder otherwise backend will not be able to work.
+
+## Classification
+* [MxNet classifier] (https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/mxclassifier.py)
+* [TensorFlow classifier] (https://github.com/Lohika-Labs/whatsonpizza/blob/master/whatsonpizza_backend/backend/tfclassifier.py)
+
+For testing MxNet model without backend deployment please use [testmodels.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/testmodels.py) or [demo.py](https://github.com/Lohika-Labs/whatsonpizza/blob/master/demo.py).
+
+Please, write us for more details dmaiboroda@lohika.com
